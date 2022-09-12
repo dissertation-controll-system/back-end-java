@@ -4,9 +4,9 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>com.masterswork</groupId>
-	<artifactId>auth</artifactId>
+	<artifactId>account</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>auth</name>
+	<name>account-service</name>
 	<description>Microservice responsible for users authorization and authentication</description>
 
 	<properties>
