@@ -1,0 +1,15 @@
+package com.masterswork.auth;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
+
+@ConfigurationPropertiesScan("com.masterswork.auth.config")
+@SpringBootApplication
+public class AuthApplication {
+
+	public static void main(String[] args) {
+		SpringApplication.run(AuthApplication.class, args);
+	}
+
+}

@@ -1,0 +1,12 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1
+      author: amish
+      changes:
+        - sqlFile:
+            comment: schema initialization
+            splitStatements: true
+            endDelimiter: \nGO
+            stripComments: true
+            path: migrations/schema-1.sql
+            relativeToChangelogFile: true
