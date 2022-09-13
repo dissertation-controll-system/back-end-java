@@ -1,7 +1,4 @@
 spring:
-  autoconfigure:
-    exclude[0]: org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
-    exclude[1]: org.springframework.boot.actuate.autoconfigure.security.servlet.ManagementWebSecurityAutoConfiguration
   application:
     name: auth-service
   liquibase:
@@ -20,3 +17,16 @@ spring:
     database: POSTGRESQL
     hibernate:
       ddl-auto: validate
+
+# TODO: implement rsa key pair encoding algorithm
+jwt:
+  secret: secretKey124214
+  accessTokenExpiry: 600000
+  refreshTokenExpiry: 320000
+
+# TODO: disable swagger-ui, api-docs in production profiles
+springdoc:
+  swagger-ui:
+    enabled: true
+  api-docs:
+    enabled: true

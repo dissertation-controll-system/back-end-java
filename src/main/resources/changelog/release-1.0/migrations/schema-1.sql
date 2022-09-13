@@ -1,74 +1,95 @@
-CREATE TABLE account
+create table account
 (
-    account_id              bigserial PRIMARY KEY,
-    created_at              timestamp,
-    created_by              varchar(255),
-    modified_at             timestamp,
-    modified_by             varchar(255),
-    active                  boolean DEFAULT false NOT NULL,
-    email                   varchar(255)          NOT NULL,
-    email_activation_state  integer DEFAULT 0     NOT NULL,
-    password                varchar(255)          NOT NULL,
-    username                varchar(255)          NOT NULL,
-    user_id                 bigint
+    account_id             bigserial
+        primary key,
+    created_at             timestamp,
+    created_by             varchar(255),
+    modified_at            timestamp,
+    modified_by            varchar(255),
+    active                 boolean default true not null,
+    email                  varchar(255)         not null,
+    email_activation_state integer default 0    not null,
+    password               varchar(255)         not null,
+    username               varchar(255)         not null
+        constraint uk_gex1lmaqpg0ir5g1f5eftyaa1
+            unique,
+    user_id                bigint
 );
 
-CREATE TABLE role
+create table faculty
 (
-    role_id                 bigserial PRIMARY KEY,
-    created_at              timestamp,
-    created_by              varchar(255),
-    modified_at             timestamp,
-    modified_by             varchar(255),
-    name                    varchar(255)
+    faculty_id  bigserial
+        primary key,
+    created_at  timestamp,
+    created_by  varchar(255),
+    modified_at timestamp,
+    modified_by varchar(255),
+    name        varchar(255)
 );
 
-CREATE TABLE account_role
+create table cathedra
 (
-    account_id              bigint NOT NULL CONSTRAINT fk_account_role_account REFERENCES account,
-    student_id              bigint NOT NULL CONSTRAINT fk_account_role_role REFERENCES role
+    cathedra_id bigserial
+        primary key,
+    created_at  timestamp,
+    created_by  varchar(255),
+    modified_at timestamp,
+    modified_by varchar(255),
+    name        varchar(255),
+    faculty_id  bigint not null
+        constraint fkdda292n339cqonlqlgmlg0han
+            references faculty
 );
 
-CREATE TABLE users
+create table role
 (
-    user_id                 bigserial PRIMARY KEY,
-    created_at              timestamp,
-    created_by              varchar(255),
-    modified_at             timestamp,
-    modified_by             varchar(255),
-    fathers_name            varchar(255),
-    first_name              varchar(255),
-    last_name               varchar(255),
-    type                    varchar(255) NOT NULL,
-    account_id              bigint CONSTRAINT fk_users_account REFERENCES account
+    role_id     bigserial
+        primary key,
+    created_at  timestamp,
+    created_by  varchar(255),
+    modified_at timestamp,
+    modified_by varchar(255),
+    name        varchar(255)
 );
 
-ALTER TABLE account ADD CONSTRAINT fk_account_user FOREIGN KEY (user_id) REFERENCES users;
-
-CREATE TABLE faculty
+create table account_role
 (
-    faculty_id              bigserial PRIMARY KEY,
-    created_at              timestamp,
-    created_by              varchar(255),
-    modified_at             timestamp,
-    modified_by             varchar(255),
-    name                    varchar(255)
+    account_id bigint not null
+        constraint fk1f8y4iy71kb1arff79s71j0dh
+            references account,
+    role_id    bigint not null
+        constraint fkrs2s3m3039h0xt8d5yhwbuyam
+            references role
 );
 
-CREATE TABLE cathedra
+create table users
 (
-    cathedra_id             bigserial PRIMARY KEY,
-    created_at              timestamp,
-    created_by              varchar(255),
-    modified_at             timestamp,
-    modified_by             varchar(255),
-    name                    varchar(255),
-    faculty_id              bigint NOT NULL CONSTRAINT fk_cathedra_faculty REFERENCES faculty
+    user_id      bigserial
+        primary key,
+    created_at   timestamp,
+    created_by   varchar(255),
+    modified_at  timestamp,
+    modified_by  varchar(255),
+    fathers_name varchar(255),
+    first_name   varchar(255),
+    last_name    varchar(255),
+    type         varchar(255) not null,
+    account_id   bigint
+        constraint fk3pwaj86pwopu3ot96qlrfo2up
+            references account
 );
 
-CREATE TABLE user_cathedra
+alter table account
+    add constraint fkra7xoi9wtlcq07tmoxxe5jrh4
+        foreign key (user_id) references users;
+
+create table user_cathedra
 (
-    user_id                 bigint NOT NULL CONSTRAINT fk_users_cathedra_users REFERENCES users,
-    cathedra_id             bigint NOT NULL CONSTRAINT fk_users_cathedra_cathedra REFERENCES cathedra
+    user_id     bigint not null
+        constraint fkf1qysfvge2olhj64dnv5fh2ny
+            references users,
+    cathedra_id bigint not null
+        constraint fkhp9i0yy41y2pws59onv33o6l6
+            references cathedra
 );
 

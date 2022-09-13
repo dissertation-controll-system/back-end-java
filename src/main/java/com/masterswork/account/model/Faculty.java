@@ -1,6 +1,8 @@
 package com.masterswork.account.model;
 
 import com.masterswork.account.model.base.AuditedEntity;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -20,6 +22,8 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
+@Builder
+@AllArgsConstructor
 @Table(name = "faculty")
 public class Faculty extends AuditedEntity {
 

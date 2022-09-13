@@ -23,6 +23,7 @@ import javax.persistence.Table;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -37,7 +38,7 @@ public class Account extends AuditedEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull
+    @Column(nullable = false, unique = true)
     @Pattern(
             regexp = "^[a-z](?:[a-z\\d]|_(?=[a-z\\d])){3,38}$",
             message = "Username must contain between 4 and 39 characters," +
@@ -67,11 +68,11 @@ public class Account extends AuditedEntity {
     @NotNull
     @Enumerated(EnumType.ORDINAL)
     @ColumnDefault("0")
-    private EmailActivationState emailActivationState;
+    private EmailActivationState emailActivationState = EmailActivationState.PENDING;
 
     @NotNull
-    @ColumnDefault("false")
-    private Boolean active;
+    @ColumnDefault("true")
+    private Boolean active = true;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", referencedColumnName = "user_id")
@@ -80,7 +81,6 @@ public class Account extends AuditedEntity {
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "account_role",
             joinColumns = @JoinColumn(name = "account_id"),
-            inverseJoinColumns = @JoinColumn(name = "student_id"))
-    private List<Role> roles;
-
+            inverseJoinColumns = @JoinColumn(name = "role_id"))
+    private List<Role> roles = new ArrayList<>();
 }
