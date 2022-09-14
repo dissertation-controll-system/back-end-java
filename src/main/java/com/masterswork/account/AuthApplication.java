@@ -4,10 +4,19 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 
-// TODO:
-//  - setup test data migration with liquibase contexts
-//	- add proper exception handling
-//  - regenerate database migration check for typos
+// TODO: setup test data migration with liquibase contexts
+// TODO: add proper exception handling
+// TODO: regenerate database migration check for typos
+// TODO: extend crud for all entities
+// TODO: use swagger annotations for proper docs
+// TODO: add healthcheck metrics
+// TODO: add unit tests
+// TODO: persistence tests
+// TODO: IT tests
+// TODO: slice tests
+// TODO: provide README
+
+// TODO: find a way to configure and deploy with k8s
 @ConfigurationPropertiesScan("com.masterswork.account.config")
 @SpringBootApplication
 public class AuthApplication {

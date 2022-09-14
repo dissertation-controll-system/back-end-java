@@ -26,7 +26,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @RequiredArgsConstructor
 public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
-    private final String BEARER_SCHEMA = "Bearer ";
+    private final static String BEARER_SCHEMA = "Bearer ";
 
     private final JwtUtil jwtUtil;
     private final Set<String> whitelistEndpoints;

@@ -18,20 +18,20 @@ public class AuthController {
 
     private final AuthService authService;
 
-    @SecurityRequirements
+    @SecurityRequirements({})
     @PostMapping("/login")
     private ResponseEntity<TokensResponseDTO> login(@RequestBody LoginRequestDTO loginRequest) {
         return ResponseEntity.ok(
                 authService.authenticateAndGenerateTokens(loginRequest.getUsername(), loginRequest.getPassword()));
     }
 
-    @SecurityRequirements
+    @SecurityRequirements({})
     @PostMapping("/signup")
     private ResponseEntity<TokensResponseDTO> signup(@RequestBody SignUpRequestDTO signUpRequest) {
         return ResponseEntity.ok(authService.createUser(signUpRequest));
     }
 
-    @SecurityRequirements
+    @SecurityRequirements({})
     @PostMapping("/token-refresh")
     private ResponseEntity<TokensResponseDTO> refreshToken(@RequestBody RefreshTokenRequestDTO refreshRequest) {
         return ResponseEntity.ok(authService.refreshAccessToken(refreshRequest.getRefreshToken()));
