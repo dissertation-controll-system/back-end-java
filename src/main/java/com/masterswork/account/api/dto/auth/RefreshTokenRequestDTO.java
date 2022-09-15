@@ -1,11 +1,14 @@
 package com.masterswork.account.api.dto.auth;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Data;
+import lombok.Getter;
 
-@Data
+import javax.validation.constraints.NotBlank;
+
+@Getter
 public class RefreshTokenRequestDTO {
 
+    @NotBlank
     @JsonProperty("refresh_token")
     private String refreshToken;
 }

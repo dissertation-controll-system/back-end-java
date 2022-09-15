@@ -57,6 +57,10 @@ public class FacultyServiceImpl implements FacultyService {
 
     @Override
     public void deleteFaculty(Long id) {
-        facultyRepository.deleteById(id);
+        if (facultyRepository.existsById(id)) {
+            facultyRepository.deleteById(id);
+        } else {
+            throw new EntityNotFoundException("No faculty with id: " + id);
+        }
     }
 }

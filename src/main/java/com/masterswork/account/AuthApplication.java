@@ -5,7 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 
 // TODO: setup test data migration with liquibase contexts
-// TODO: add proper exception handling
+// TODO: add ability to recover password via email
 // TODO: regenerate database migration check for typos
 // TODO: extend crud for all entities
 // TODO: use swagger annotations for proper docs

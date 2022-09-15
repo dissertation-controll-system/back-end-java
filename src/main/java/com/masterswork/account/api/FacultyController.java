@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import javax.validation.Valid;
 import java.util.List;
 
 
@@ -29,7 +30,7 @@ public class FacultyController {
     private final FacultyService facultyService;
 
     @PostMapping
-    public ResponseEntity<FacultyResponseDTO> createFaculty(@RequestBody FacultyCreateDTO body) {
+    public ResponseEntity<FacultyResponseDTO> createFaculty(@Valid @RequestBody FacultyCreateDTO body) {
         var newEntity = facultyService.createFaculty(body);
         var location = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}")
@@ -39,7 +40,7 @@ public class FacultyController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<FacultyResponseDTO> updateFaculty(@PathVariable Long id, @RequestBody FacultyUpdateDTO body) {
+    public ResponseEntity<FacultyResponseDTO> updateFaculty(@PathVariable Long id, @Valid @RequestBody FacultyUpdateDTO body) {
         var updatedEntity = facultyService.updateFaculty(id, body);
         var location = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}")

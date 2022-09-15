@@ -1,5 +1,6 @@
 package com.masterswork.account.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.masterswork.account.config.principal.UserPrincipalAdapter;
 import com.masterswork.account.jwt.JwtUtil;
 import com.masterswork.account.jwt.filter.JwtAuthorizationFilter;
@@ -17,10 +18,13 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import javax.servlet.http.HttpServletResponse;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
+
+import static org.springframework.http.HttpStatus.UNAUTHORIZED;
+import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON_VALUE;
 
 @Configuration
 public class SecurityConfig {
@@ -39,7 +43,7 @@ public class SecurityConfig {
     private final static String refreshTokenEndpoint = "/token-refresh";
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http, JwtUtil jwtUtil) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http, JwtUtil jwtUtil, ObjectMapper objectMapper) throws Exception {
         http.csrf().disable()
                 .httpBasic().disable()
                 .sessionManagement((session) -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -48,9 +52,16 @@ public class SecurityConfig {
                         .antMatchers(swaggerEndpoints).permitAll()
                         .anyRequest().authenticated()
                 )
-                .addFilterBefore(new JwtAuthorizationFilter(jwtUtil, getAllWhitelistEndpoints()), UsernamePasswordAuthenticationFilter.class)
                 .exceptionHandling()
-                .authenticationEntryPoint((request, response, authException) -> response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized"));
+                .authenticationEntryPoint((request, response, authException) -> {
+                    response.setStatus(UNAUTHORIZED.value());
+                    response.setContentType(APPLICATION_JSON_VALUE);
+                    objectMapper.writeValue(response.getOutputStream(), Map.of("error_message", "No access token provided"));
+                });
+
+        JwtAuthorizationFilter jwtAuthorizationFilter = new JwtAuthorizationFilter(objectMapper, jwtUtil, getAllWhitelistEndpoints());
+        http.addFilterBefore(jwtAuthorizationFilter, UsernamePasswordAuthenticationFilter.class);
+
         return http.build();
     }
 

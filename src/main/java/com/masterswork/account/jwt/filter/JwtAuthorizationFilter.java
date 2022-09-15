@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
@@ -14,13 +15,12 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.HttpStatus.FORBIDDEN;
-import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON_VALUE;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -28,36 +28,36 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
     private final static String BEARER_SCHEMA = "Bearer ";
 
+    private final ObjectMapper objectMapper;
     private final JwtUtil jwtUtil;
     private final Set<String> whitelistEndpoints;
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        String authorizationHeader = request.getHeader(AUTHORIZATION);
-        if (authorizationHeader != null && authorizationHeader.startsWith(BEARER_SCHEMA)) {
-            try {
-                String token = authorizationHeader.substring(BEARER_SCHEMA.length());
-                Authentication authentication = jwtUtil.getAuthenticationFromRawToken(token);
-
-                SecurityContextHolder.getContext().setAuthentication(authentication);
-                filterChain.doFilter(request, response);
-            } catch (JWTVerificationException exception) {
-                // TODO: throw custom excpetion for contoller advice to handle via exhandler
-                log.error("Error logging in: {}", exception.getMessage());
-                response.setHeader("error", exception.getMessage());
-                response.setStatus(FORBIDDEN.value());
-                Map<String, String> error = new HashMap<>();
-                error.put("error_message", exception.getMessage());
-                response.setContentType(APPLICATION_JSON_VALUE);
-                new ObjectMapper().writeValue(response.getOutputStream(), error);
-            }
-        } else {
-            filterChain.doFilter(request, response);
-        }
+    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
+        return whitelistEndpoints != null && whitelistEndpoints.contains(request.getServletPath());
     }
 
     @Override
-    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
-        return whitelistEndpoints != null && whitelistEndpoints.contains(request.getServletPath());
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+        String jwt = resolveToken(request);
+        if (StringUtils.hasText(jwt)) {
+            try {
+                Authentication authentication = jwtUtil.getAuthenticationFromRawToken(jwt);
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+            } catch (JWTVerificationException exception) {
+                response.setStatus(FORBIDDEN.value());
+                response.setContentType(APPLICATION_JSON_VALUE);
+                objectMapper.writeValue(response.getOutputStream(), Map.of("error_message", exception.getMessage()));
+            }
+        }
+        filterChain.doFilter(request, response);
+    }
+
+    private String resolveToken(HttpServletRequest request) {
+        String authorizationHeader = request.getHeader(AUTHORIZATION);
+        if (StringUtils.hasText(authorizationHeader) && authorizationHeader.startsWith(BEARER_SCHEMA)) {
+            return authorizationHeader.substring(BEARER_SCHEMA.length());
+        }
+        return null;
     }
 }

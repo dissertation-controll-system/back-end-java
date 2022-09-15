@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
+
 @RestController
 @RequiredArgsConstructor
 public class AuthController {
@@ -20,20 +22,20 @@ public class AuthController {
 
     @SecurityRequirements({})
     @PostMapping("/login")
-    private ResponseEntity<TokensResponseDTO> login(@RequestBody LoginRequestDTO loginRequest) {
+    private ResponseEntity<TokensResponseDTO> login(@Valid @RequestBody LoginRequestDTO loginRequest) {
         return ResponseEntity.ok(
                 authService.authenticateAndGenerateTokens(loginRequest.getUsername(), loginRequest.getPassword()));
     }
 
     @SecurityRequirements({})
     @PostMapping("/signup")
-    private ResponseEntity<TokensResponseDTO> signup(@RequestBody SignUpRequestDTO signUpRequest) {
+    private ResponseEntity<TokensResponseDTO> signup(@Valid @RequestBody SignUpRequestDTO signUpRequest) {
         return ResponseEntity.ok(authService.createUser(signUpRequest));
     }
 
     @SecurityRequirements({})
     @PostMapping("/token-refresh")
-    private ResponseEntity<TokensResponseDTO> refreshToken(@RequestBody RefreshTokenRequestDTO refreshRequest) {
+    private ResponseEntity<TokensResponseDTO> refreshToken(@Valid @RequestBody RefreshTokenRequestDTO refreshRequest) {
         return ResponseEntity.ok(authService.refreshAccessToken(refreshRequest.getRefreshToken()));
     }
 }

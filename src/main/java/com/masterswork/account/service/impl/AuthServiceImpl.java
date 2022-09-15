@@ -7,6 +7,7 @@ import com.masterswork.account.jwt.JwtUtil;
 import com.masterswork.account.model.Account;
 import com.masterswork.account.repository.AccountRepository;
 import com.masterswork.account.service.AuthService;
+import com.masterswork.account.service.exception.UserExistsException;
 import com.masterswork.account.service.mapper.AccountMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -18,6 +19,9 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -54,10 +58,24 @@ public class AuthServiceImpl implements AuthService {
     @Transactional
     @Override
     public TokensResponseDTO createUser(SignUpRequestDTO signUpRequestDTO) {
+        checkIfUsernameOrEmailTaken(signUpRequestDTO.getUsername(), signUpRequestDTO.getEmail());
         // TODO: implement user email verification... via email :)
         Account saved = accountRepository.save(accountMapper.createFrom(signUpRequestDTO));
         UserDetails account = new UserPrincipalAdapter(saved);
 
         return TokensResponseDTO.of(jwtUtil.generateAccessToken(account), jwtUtil.generateRefreshToken(account));
+    }
+
+    private void checkIfUsernameOrEmailTaken(String username, String email) {
+        boolean usernameTaken = accountRepository.existsByUsername(username);
+        boolean emailTaken = accountRepository.existsByEmail(email);
+
+        if (usernameTaken || emailTaken) {
+            Set<String> messages = new HashSet<>();
+            if (usernameTaken) messages.add("Username " + username + " is already taken");
+            if (usernameTaken) messages.add("Email " + email + " is already taken");
+
+            throw new UserExistsException(messages.stream().collect(Collectors.joining(" ")));
+        }
     }
 }
