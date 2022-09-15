@@ -21,7 +21,6 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -75,7 +74,7 @@ public class AuthServiceImpl implements AuthService {
             if (usernameTaken) messages.add("Username " + username + " is already taken");
             if (usernameTaken) messages.add("Email " + email + " is already taken");
 
-            throw new UserExistsException(messages.stream().collect(Collectors.joining(" ")));
+            throw new UserExistsException(String.join(" ", messages));
         }
     }
 }

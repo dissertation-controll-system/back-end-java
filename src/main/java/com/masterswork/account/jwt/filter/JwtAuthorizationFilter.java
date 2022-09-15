@@ -19,7 +19,7 @@ import java.util.Map;
 import java.util.Set;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
-import static org.springframework.http.HttpStatus.FORBIDDEN;
+import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON_VALUE;
 
 @Slf4j
@@ -45,7 +45,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
                 Authentication authentication = jwtUtil.getAuthenticationFromRawToken(jwt);
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             } catch (JWTVerificationException exception) {
-                response.setStatus(FORBIDDEN.value());
+                response.setStatus(UNAUTHORIZED.value());
                 response.setContentType(APPLICATION_JSON_VALUE);
                 objectMapper.writeValue(response.getOutputStream(), Map.of("error_message", exception.getMessage()));
             }
