@@ -45,6 +45,7 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http, JwtUtil jwtUtil, ObjectMapper objectMapper) throws Exception {
         http.csrf().disable()
+                .cors().disable()
                 .httpBasic().disable()
                 .sessionManagement((session) -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests((authorize) -> authorize
