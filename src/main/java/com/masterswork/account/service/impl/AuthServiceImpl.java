@@ -72,7 +72,7 @@ public class AuthServiceImpl implements AuthService {
         if (usernameTaken || emailTaken) {
             Set<String> messages = new HashSet<>();
             if (usernameTaken) messages.add("Username " + username + " is already taken");
-            if (usernameTaken) messages.add("Email " + email + " is already taken");
+            if (emailTaken) messages.add("Email " + email + " is already taken");
 
             throw new UserExistsException(String.join(" ", messages));
         }

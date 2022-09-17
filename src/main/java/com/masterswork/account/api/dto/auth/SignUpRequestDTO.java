@@ -3,17 +3,32 @@ package com.masterswork.account.api.dto.auth;
 import lombok.Data;
 
 import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
 
 @Data
 public class SignUpRequestDTO {
 
-    @NotBlank
+    @Pattern(
+            regexp = "^[a-z](?:[a-z\\d]|_(?=[a-z\\d])){3,38}$",
+            message = "Username must contain between 4 and 39 characters," +
+                    " allowed characters: lowercase letters, numbers, underscore" +
+                    " must start with lowercase letter" +
+                    " can't contain two underscores in a row" +
+                    " can't end with an underscore"
+    )
     private String username;
 
     @Email
     private String email;
 
-    @NotBlank
+    @Pattern(
+            regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[^\\w\\s])[\\x00-\\xFF]{6,}$",
+            message = "Password must contain " +
+                    " at least six ASCII characters," +
+                    " at least one number," +
+                    " at least one lowercase letter," +
+                    " at least one uppercase letter," +
+                    " at least one special character"
+    )
     private String password;
 }
