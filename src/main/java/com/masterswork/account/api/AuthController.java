@@ -55,7 +55,7 @@ public class AuthController {
         return ResponseEntity.ok(authService.createUser(signUpRequest));
     }
 
-    @Operation(summary = "Generates new jwt access token based on provided referesh token",
+    @Operation(summary = "Generates new jwt access token based on provided refresh token",
             description = "Consumes and validates refresh token, returns access token and refresh token on success.")
     @ApiResponse(responseCode = "200", description = "Successful refresh",
             content = @Content(mediaType = "application/json", schema = @Schema(implementation = TokensResponseDTO.class)))
