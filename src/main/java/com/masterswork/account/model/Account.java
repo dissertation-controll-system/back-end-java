@@ -23,8 +23,8 @@ import javax.persistence.Table;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -82,5 +82,17 @@ public class Account extends AuditedEntity {
     @JoinTable(name = "account_role",
             joinColumns = @JoinColumn(name = "account_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
-    private List<Role> roles = new ArrayList<>();
+    private Set<Role> roles = new HashSet<>();
+
+    public Account addRole(Role role) {
+        roles.add(role);
+        role.getAccounts().add(this);
+        return this;
+    }
+
+    public Account setAppUser(AppUser appUser) {
+        this.user = appUser;
+        appUser.setAccount(this);
+        return this;
+    }
 }

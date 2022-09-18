@@ -10,6 +10,7 @@ import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.NullValuePropertyMappingStrategy;
 
+import java.util.Collection;
 import java.util.List;
 
 @Mapper(componentModel = "spring")
@@ -17,7 +18,7 @@ public interface FacultyMapper {
 
     FacultyResponseDTO toDto(Faculty faculty);
 
-    List<FacultyResponseDTO> toDto(List<Faculty> all);
+    List<FacultyResponseDTO> toDto(Collection<Faculty> all);
 
     @Mapping(target = "id", ignore = true)
     Faculty createFrom(FacultyCreateDTO facultyResponseDTO);

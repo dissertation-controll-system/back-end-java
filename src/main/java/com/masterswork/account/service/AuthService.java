@@ -1,7 +1,7 @@
 package com.masterswork.account.service;
 
-import com.masterswork.account.api.dto.auth.SignUpRequestDTO;
-import com.masterswork.account.api.dto.auth.TokensResponseDTO;
+import com.masterswork.account.api.auth.dto.SignUpRequestDTO;
+import com.masterswork.account.api.auth.dto.TokensResponseDTO;
 
 
 public interface AuthService {

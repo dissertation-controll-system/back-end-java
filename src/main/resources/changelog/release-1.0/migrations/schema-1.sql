@@ -1,16 +1,15 @@
 create table account
 (
-    account_id             bigserial
-        primary key,
-    created_at             timestamp,
-    created_by             varchar(255),
-    modified_at            timestamp,
-    modified_by            varchar(255),
-    active                 boolean default true not null,
-    email                  varchar(255)         not null,
-    email_activation_state integer default 0    not null,
-    password               varchar(255)         not null,
-    username               varchar(255)         not null
+    account_id              bigserial           PRIMARY KEY,
+    created_at              timestamp           DEFAULT now(),
+    created_by              varchar(255)        DEFAULT 'system',
+    modified_at             timestamp           DEFAULT now(),
+    modified_by             varchar(255)        DEFAULT 'system',
+    active                  boolean             DEFAULT true NOT NULL,
+    email                   varchar(255)        NOT NULL,
+    email_activation_state  integer             DEFAULT 0    NOT NULL,
+    password                varchar(255)        NOT NULL,
+    username                varchar(255)        NOT NULL
         constraint uk_gex1lmaqpg0ir5g1f5eftyaa1
             unique,
     user_id                bigint
@@ -18,12 +17,11 @@ create table account
 
 create table faculty
 (
-    faculty_id  bigserial
-        primary key,
-    created_at  timestamp,
-    created_by  varchar(255),
-    modified_at timestamp,
-    modified_by varchar(255),
+    faculty_id  bigserial PRIMARY KEY,
+    created_at  timestamp DEFAULT now(),
+    created_by  varchar(255) DEFAULT 'system',
+    modified_at timestamp DEFAULT now(),
+    modified_by varchar(255) DEFAULT 'system',
     name        varchar(255)
 );
 
@@ -31,10 +29,10 @@ create table cathedra
 (
     cathedra_id bigserial
         primary key,
-    created_at  timestamp,
-    created_by  varchar(255),
-    modified_at timestamp,
-    modified_by varchar(255),
+    created_at  timestamp DEFAULT now(),
+    created_by  varchar(255) DEFAULT 'system',
+    modified_at timestamp DEFAULT now(),
+    modified_by varchar(255) DEFAULT 'system',
     name        varchar(255),
     faculty_id  bigint not null
         constraint fkdda292n339cqonlqlgmlg0han
@@ -45,10 +43,10 @@ create table role
 (
     role_id     bigserial
         primary key,
-    created_at  timestamp,
-    created_by  varchar(255),
-    modified_at timestamp,
-    modified_by varchar(255),
+    created_at  timestamp DEFAULT now(),
+    created_by  varchar(255) DEFAULT 'system',
+    modified_at timestamp DEFAULT now(),
+    modified_by varchar(255) DEFAULT 'system',
     name        varchar(255)
 );
 
@@ -64,16 +62,15 @@ create table account_role
 
 create table users
 (
-    user_id      bigserial
-        primary key,
-    created_at   timestamp,
-    created_by   varchar(255),
-    modified_at  timestamp,
-    modified_by  varchar(255),
-    fathers_name varchar(255),
-    first_name   varchar(255),
-    last_name    varchar(255),
-    type         varchar(255) not null,
+    user_id         bigserial  primary key,
+    created_at      timestamp DEFAULT now(),
+    created_by      varchar(255) DEFAULT 'system',
+    modified_at     timestamp DEFAULT now(),
+    modified_by     varchar(255) DEFAULT 'system',
+    fathers_name    varchar(255),
+    first_name      varchar(255),
+    last_name       varchar(255),
+    type            varchar(255) not null,
     account_id   bigint
         constraint fk3pwaj86pwopu3ot96qlrfo2up
             references account

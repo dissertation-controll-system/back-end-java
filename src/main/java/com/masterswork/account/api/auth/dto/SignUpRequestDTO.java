@@ -1,4 +1,4 @@
-package com.masterswork.account.api.dto.auth;
+package com.masterswork.account.api.auth.dto;
 
 import lombok.Data;
 

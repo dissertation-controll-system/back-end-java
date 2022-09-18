@@ -13,7 +13,8 @@ import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -31,6 +32,6 @@ public class Role extends AuditedEntity {
     private String name;
 
     @ManyToMany(mappedBy = "roles")
-    private List<Account> accounts;
+    private Set<Account> accounts = new HashSet<>();
 
 }

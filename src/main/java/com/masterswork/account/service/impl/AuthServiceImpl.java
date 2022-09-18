@@ -1,7 +1,7 @@
 package com.masterswork.account.service.impl;
 
-import com.masterswork.account.api.dto.auth.SignUpRequestDTO;
-import com.masterswork.account.api.dto.auth.TokensResponseDTO;
+import com.masterswork.account.api.auth.dto.SignUpRequestDTO;
+import com.masterswork.account.api.auth.dto.TokensResponseDTO;
 import com.masterswork.account.config.principal.UserPrincipalAdapter;
 import com.masterswork.account.jwt.JwtUtil;
 import com.masterswork.account.model.Account;
@@ -58,7 +58,7 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public TokensResponseDTO createUser(SignUpRequestDTO signUpRequestDTO) {
         checkIfUsernameOrEmailTaken(signUpRequestDTO.getUsername(), signUpRequestDTO.getEmail());
-        // TODO: implement user email verification... via email :)
+
         Account saved = accountRepository.save(accountMapper.createFrom(signUpRequestDTO));
         UserDetails account = new UserPrincipalAdapter(saved);
 

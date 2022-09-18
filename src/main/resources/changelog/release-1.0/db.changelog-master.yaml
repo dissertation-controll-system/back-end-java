@@ -10,3 +10,15 @@ databaseChangeLog:
             stripComments: true
             path: migrations/schema-1.sql
             relativeToChangelogFile: true
+  - changeSet:
+      id: 2
+      author: amish
+      context: demo
+      changes:
+        - sqlFile:
+            comment: test data
+            splitStatements: true
+            endDelimiter: \nGO
+            stripComments: true
+            path: test-data/testData.sql
+            relativeToChangelogFile: true

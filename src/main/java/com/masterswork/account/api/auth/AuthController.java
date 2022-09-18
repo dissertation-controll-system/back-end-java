@@ -1,9 +1,9 @@
-package com.masterswork.account.api;
+package com.masterswork.account.api.auth;
 
-import com.masterswork.account.api.dto.auth.LoginRequestDTO;
-import com.masterswork.account.api.dto.auth.RefreshTokenRequestDTO;
-import com.masterswork.account.api.dto.auth.SignUpRequestDTO;
-import com.masterswork.account.api.dto.auth.TokensResponseDTO;
+import com.masterswork.account.api.auth.dto.LoginRequestDTO;
+import com.masterswork.account.api.auth.dto.RefreshTokenRequestDTO;
+import com.masterswork.account.api.auth.dto.SignUpRequestDTO;
+import com.masterswork.account.api.auth.dto.TokensResponseDTO;
 import com.masterswork.account.api.dto.error.ApiError;
 import com.masterswork.account.service.AuthService;
 import io.swagger.v3.oas.annotations.Operation;
