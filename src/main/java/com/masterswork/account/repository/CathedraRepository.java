@@ -12,5 +12,7 @@ public interface CathedraRepository extends JpaRepository<Cathedra, Long> {
 
     List<Cathedra> findAllByFacultyId(Long facultyId);
 
+    List<Cathedra> findAllByUsers_Id(Long userId);
+
     Optional<Cathedra> findByFacultyIdAndId(Long facultyId, Long cathedraId);
 }

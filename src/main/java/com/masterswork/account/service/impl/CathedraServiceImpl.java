@@ -43,6 +43,11 @@ public class CathedraServiceImpl implements CathedraService {
     }
 
     @Override
+    public List<CathedraResponseDTO> getAllCathedrasByAppUserId(Long appUserId) {
+        return cathedraMapper.toDto(cathedraRepository.findAllByUsers_Id(appUserId));
+    }
+
+    @Override
     public List<CathedraResponseDTO> findAllCathedrasByFacultyId(Long facultyId) {
         List<Cathedra> allByFacultyId = cathedraRepository.findAllByFacultyId(facultyId);
 
@@ -81,16 +86,13 @@ public class CathedraServiceImpl implements CathedraService {
     }
 
     @Override
-    public CathedraResponseDTO updateCathedraByFacultyIdAndCathedraId(Long facultyId, Long cathedraId, CathedraUpdateDTO cathedraUpdateDTO) {
-        Cathedra cathedra = cathedraRepository.findByFacultyIdAndId(facultyId, cathedraId)
-                .orElseThrow(() -> new EntityNotFoundException(
-                        String.format("No cathedra with facultyId %d and cathedraId %d", facultyId, cathedraId)));
+    public CathedraResponseDTO assignCathedraToFaculty(Long facultyId, Long cathedraId) {
+        Cathedra cathedra = cathedraRepository.findById(cathedraId)
+                .orElseThrow(() -> new EntityNotFoundException("No cathedra with Id " + cathedraId));
+        Faculty faculty = facultyRepository.findById(facultyId)
+                .orElseThrow(() -> new EntityNotFoundException("No faculty with Id " + facultyId));
 
-        if (cathedraUpdateDTO.getFacultyId() != null) {
-            updateFacultyById(cathedraUpdateDTO.getFacultyId(), cathedra);
-        }
-
-        cathedraMapper.updateFrom(cathedra, cathedraUpdateDTO);
+        cathedra.setFaculty(faculty);
 
         return cathedraMapper.toDto(cathedraRepository.save(cathedra));
     }
@@ -109,32 +111,9 @@ public class CathedraServiceImpl implements CathedraService {
     }
 
     @Override
-    public CathedraResponseDTO patchCathedraByFacultyIdAndCathedraId(Long facultyId, Long cathedraId, CathedraUpdateDTO cathedraUpdateDTO) {
-        Cathedra cathedra = cathedraRepository.findByFacultyIdAndId(facultyId, cathedraId)
-                .orElseThrow(() -> new EntityNotFoundException(
-                        String.format("No cathedra with facultyId %d and cathedraId %d", facultyId, cathedraId)));
-
-        if (cathedraUpdateDTO.getFacultyId() != null) {
-            updateFacultyById(cathedraUpdateDTO.getFacultyId(), cathedra);
-        }
-        cathedraMapper.patchFrom(cathedra, cathedraUpdateDTO);
-
-        return cathedraMapper.toDto(cathedraRepository.save(cathedra));
-    }
-
-    @Override
     public void deleteCathedraById(Long cathedraId) {
         Cathedra cathedra = cathedraRepository.findById(cathedraId)
                 .orElseThrow(() -> new EntityNotFoundException("No cathedra with id " + cathedraId));
-
-        cathedraRepository.delete(cathedra);
-    }
-
-    @Override
-    public void deleteCathedraByFacultyIdAndCathedraId(Long facultyId, Long cathedraId) {
-        Cathedra cathedra = cathedraRepository.findByFacultyIdAndId(facultyId, cathedraId)
-                .orElseThrow(() -> new EntityNotFoundException(
-                        String.format("No cathedra with facultyId %d and cathedraId %d", facultyId, cathedraId)));
 
         cathedraRepository.delete(cathedra);
     }

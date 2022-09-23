@@ -16,6 +16,10 @@ public interface RoleService {
 
     List<RoleResponseDTO> getAllRoles();
 
+    List<RoleResponseDTO> getAllRolesByAccountId(Long accountId);
+
+    List<RoleResponseDTO> getAllRolesByUsername(String username);
+
     RoleResponseDTO getRole(Long id);
 
     void deleteRole(Long id);

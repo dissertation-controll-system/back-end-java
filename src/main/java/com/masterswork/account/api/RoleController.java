@@ -22,7 +22,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping("/role")
+@RequestMapping("/roles")
 @RequiredArgsConstructor
 public class RoleController {
 

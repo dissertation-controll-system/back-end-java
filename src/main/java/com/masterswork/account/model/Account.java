@@ -75,7 +75,7 @@ public class Account extends AuditedEntity {
     private Boolean active = true;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", referencedColumnName = "user_id")
+    @JoinColumn(name = "user_id", referencedColumnName = "user_id", unique = true)
     private AppUser user;
 
     @ManyToMany(fetch = FetchType.EAGER)
@@ -91,6 +91,8 @@ public class Account extends AuditedEntity {
     }
 
     public Account setAppUser(AppUser appUser) {
+        if (this.user != null) user.setAccount(null);
+
         this.user = appUser;
         appUser.setAccount(this);
         return this;

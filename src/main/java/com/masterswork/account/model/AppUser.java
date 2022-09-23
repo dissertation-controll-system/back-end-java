@@ -21,7 +21,8 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -56,9 +57,15 @@ public class AppUser extends AuditedEntity {
     @JoinTable(name = "user_cathedra",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "cathedra_id"))
-    private List<Cathedra> cathedras;
+    private Set<Cathedra> cathedras = new HashSet<>();
 
     public String getFullName() {
         return String.join(" ", lastName, firstName, fathersName);
+    }
+
+    public AppUser addCathedra(Cathedra cathedra) {
+        cathedras.add(cathedra);
+        cathedra.getUsers().add(this);
+        return this;
     }
 }

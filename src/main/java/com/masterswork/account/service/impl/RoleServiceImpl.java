@@ -49,6 +49,16 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
+    public List<RoleResponseDTO> getAllRolesByAccountId(Long accountId) {
+        return roleMapper.toDto(roleRepository.findAllByAccounts_Id(accountId));
+    }
+
+    @Override
+    public List<RoleResponseDTO> getAllRolesByUsername(String username) {
+        return roleMapper.toDto(roleRepository.findAllByAccounts_Username(username));
+    }
+
+    @Override
     public RoleResponseDTO getRole(Long id) {
         return roleRepository.findById(id)
                 .map(roleMapper::toDto)

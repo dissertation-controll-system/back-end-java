@@ -2,7 +2,6 @@ package com.masterswork.account.api;
 
 import com.masterswork.account.api.dto.cathedra.CathedraCreateDTO;
 import com.masterswork.account.api.dto.cathedra.CathedraResponseDTO;
-import com.masterswork.account.api.dto.cathedra.CathedraUpdateDTO;
 import com.masterswork.account.api.dto.faculty.FacultyCreateDTO;
 import com.masterswork.account.api.dto.faculty.FacultyResponseDTO;
 import com.masterswork.account.api.dto.faculty.FacultyUpdateDTO;
@@ -48,34 +47,34 @@ public class FacultyController {
         return ResponseEntity.ok(facultyService.getAllFaculties());
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<FacultyResponseDTO> getFaculty(@PathVariable Long id) {
-        return ResponseEntity.ok(facultyService.getFaculty(id));
+    @GetMapping("/{facultyId}")
+    public ResponseEntity<FacultyResponseDTO> getFaculty(@PathVariable Long facultyId) {
+        return ResponseEntity.ok(facultyService.getFaculty(facultyId));
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<FacultyResponseDTO> updateFaculty(@PathVariable Long id, @Valid @RequestBody FacultyUpdateDTO body) {
-        var updatedEntity = facultyService.updateFaculty(id, body);
+    @PutMapping("/{facultyId}")
+    public ResponseEntity<FacultyResponseDTO> updateFaculty(@PathVariable Long facultyId, @Valid @RequestBody FacultyUpdateDTO body) {
+        var updatedEntity = facultyService.updateFaculty(facultyId, body);
         var location = ServletUriComponentsBuilder.fromCurrentRequest()
-                .path("/{id}")
+                .path("/{facultyId}")
                 .buildAndExpand(updatedEntity.getId())
                 .toUri();
         return ResponseEntity.status(HttpStatus.OK).location(location).body(updatedEntity);
     }
 
-    @PatchMapping("/{id}")
-    public ResponseEntity<FacultyResponseDTO> patchFaculty(@PathVariable Long id, @RequestBody FacultyUpdateDTO body) {
-        var patchedEntity = facultyService.patchFaculty(id, body);
+    @PatchMapping("/{facultyId}")
+    public ResponseEntity<FacultyResponseDTO> patchFaculty(@PathVariable Long facultyId, @RequestBody FacultyUpdateDTO body) {
+        var patchedEntity = facultyService.patchFaculty(facultyId, body);
         var location = ServletUriComponentsBuilder.fromCurrentRequest()
-                .path("/{id}")
+                .path("/{facultyId}")
                 .buildAndExpand(patchedEntity.getId())
                 .toUri();
         return ResponseEntity.status(HttpStatus.OK).location(location).body(patchedEntity);
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteFaculty(@PathVariable Long id) {
-        facultyService.deleteFaculty(id);
+    @DeleteMapping("/{facultyId}")
+    public ResponseEntity<?> deleteFaculty(@PathVariable Long facultyId) {
+        facultyService.deleteFaculty(facultyId);
         return ResponseEntity.noContent().build();
     }
 
@@ -100,33 +99,14 @@ public class FacultyController {
         return ResponseEntity.ok(cathedraService.getCathedraByFacultyIdAndCathedraId(facultyId, cathedraId));
     }
 
-
     @PutMapping("/{facultyId}/cathedras/{cathedraId}")
-    public ResponseEntity<CathedraResponseDTO> updateCathedraByFacultyIdAndCathedraId(
-            @PathVariable Long facultyId, @PathVariable Long cathedraId, @Valid @RequestBody CathedraUpdateDTO body) {
-        var updatedEntity = cathedraService.updateCathedraByFacultyIdAndCathedraId(facultyId, cathedraId, body);
+    public ResponseEntity<CathedraResponseDTO> assignCathedraToFaculty(@PathVariable Long facultyId, @PathVariable Long cathedraId) {
+        var updatedEntity = cathedraService.assignCathedraToFaculty(facultyId, cathedraId);
         var location = ServletUriComponentsBuilder.fromUriString("/cathedras")
                 .path("/{id}")
                 .buildAndExpand(updatedEntity.getId())
                 .toUri();
         return ResponseEntity.status(HttpStatus.OK).location(location).body(updatedEntity);
-    }
-
-    @PatchMapping("/{facultyId}/cathedras/{cathedraId}")
-    public ResponseEntity<CathedraResponseDTO> patchCathedraByFacultyIdAndCathedraId(
-            @PathVariable Long facultyId, @PathVariable Long cathedraId, @RequestBody CathedraUpdateDTO body) {
-        var patchedEntity = cathedraService.patchCathedraByFacultyIdAndCathedraId(facultyId, cathedraId, body);
-        var location = ServletUriComponentsBuilder.fromUriString("/cathedras")
-                .path("/{id}")
-                .buildAndExpand(patchedEntity.getId())
-                .toUri();
-        return ResponseEntity.status(HttpStatus.OK).location(location).body(patchedEntity);
-    }
-
-    @DeleteMapping("/{facultyId}/cathedras/{cathedraId}")
-    public ResponseEntity<?> deleteCathedraByFacultyIdAndCathedraId(@PathVariable Long facultyId, @PathVariable Long cathedraId) {
-        cathedraService.deleteCathedraByFacultyIdAndCathedraId(facultyId, cathedraId);
-        return ResponseEntity.noContent().build();
     }
 
 }

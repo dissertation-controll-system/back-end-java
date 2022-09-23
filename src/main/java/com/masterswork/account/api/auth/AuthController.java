@@ -1,5 +1,6 @@
 package com.masterswork.account.api.auth;
 
+import com.masterswork.account.api.auth.dto.AuthorizationResponseDTO;
 import com.masterswork.account.api.auth.dto.LoginRequestDTO;
 import com.masterswork.account.api.auth.dto.RefreshTokenRequestDTO;
 import com.masterswork.account.api.auth.dto.SignUpRequestDTO;
@@ -37,7 +38,7 @@ public class AuthController {
     @ApiResponse(responseCode = "401", description = "Username corresponding to token data not found",
             content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiError.class)))
     @PostMapping("/login")
-    private ResponseEntity<TokensResponseDTO> login(@Valid @RequestBody LoginRequestDTO loginRequest) {
+    private ResponseEntity<AuthorizationResponseDTO> login(@Valid @RequestBody LoginRequestDTO loginRequest) {
         return ResponseEntity.ok(
                 authService.authenticateAndGenerateTokens(loginRequest.getUsername(), loginRequest.getPassword()));
     }
@@ -51,7 +52,7 @@ public class AuthController {
     @ApiResponse(responseCode = "409", description = "Username or email already taken",
             content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiError.class)))
     @PostMapping("/signup")
-    private ResponseEntity<TokensResponseDTO> signup(@Valid @RequestBody SignUpRequestDTO signUpRequest) {
+    private ResponseEntity<AuthorizationResponseDTO> signup(@Valid @RequestBody SignUpRequestDTO signUpRequest) {
         return ResponseEntity.ok(authService.createUser(signUpRequest));
     }
 
@@ -66,7 +67,7 @@ public class AuthController {
     @ApiResponse(responseCode = "401", description = "Username corresponding to token data not found",
             content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiError.class)))
     @PostMapping("/token-refresh")
-    private ResponseEntity<TokensResponseDTO> refreshToken(@Valid @RequestBody RefreshTokenRequestDTO refreshRequest) {
+    private ResponseEntity<AuthorizationResponseDTO> refreshToken(@Valid @RequestBody RefreshTokenRequestDTO refreshRequest) {
         return ResponseEntity.ok(authService.refreshAccessToken(refreshRequest.getRefreshToken()));
     }
 }

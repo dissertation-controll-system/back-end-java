@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -33,7 +34,6 @@ public class AccountServiceImpl implements AccountService {
         account.addRole(role);
 
         accountRepository.save(account);
-        roleRepository.save(role);
 
         return accountMapper.toDto(account);
     }
@@ -47,9 +47,25 @@ public class AccountServiceImpl implements AccountService {
 
         account.setAppUser(appUser);
 
-        accountRepository.save(account);
-        appUserRepository.save(appUser);
+        return accountMapper.toDto(accountRepository.save(account));
+    }
 
-        return accountMapper.toDto(account);
+    @Override
+    public List<AccountResponseDTO> getAllAccounts() {
+        return accountMapper.toDto(accountRepository.findAll());
+    }
+
+    @Override
+    public AccountResponseDTO getAccountByUsername(String username) {
+        return accountRepository.findFirstByUsername(username)
+                .map(accountMapper::toDto)
+                .orElseThrow(() -> new EntityNotFoundException("No account with username: " + username));
+    }
+
+    @Override
+    public AccountResponseDTO getAccountById(Long accountId) {
+        return accountRepository.findById(accountId)
+                .map(accountMapper::toDto)
+                .orElseThrow(() -> new EntityNotFoundException("No account with id: " + accountId));
     }
 }

@@ -15,7 +15,8 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -37,5 +38,5 @@ public class Cathedra extends AuditedEntity {
     private Faculty faculty;
 
     @ManyToMany(mappedBy = "cathedras")
-    private List<AppUser> users;
+    private Set<AppUser> users = new HashSet<>();
 }

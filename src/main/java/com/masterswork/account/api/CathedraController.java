@@ -26,21 +26,21 @@ public class CathedraController {
 
     private final CathedraService cathedraService;
 
-    @PutMapping("/{id}")
-    public ResponseEntity<CathedraResponseDTO> updateCathedra(@PathVariable Long id, @Valid @RequestBody CathedraUpdateDTO body) {
-        var updatedEntity = cathedraService.updateCathedra(id, body);
+    @PutMapping("/{cathedraId}")
+    public ResponseEntity<CathedraResponseDTO> updateCathedra(@PathVariable Long cathedraId, @Valid @RequestBody CathedraUpdateDTO body) {
+        var updatedEntity = cathedraService.updateCathedra(cathedraId, body);
         var location = ServletUriComponentsBuilder.fromCurrentRequest()
-                .path("/{id}")
+                .path("/{cathedraId}")
                 .buildAndExpand(updatedEntity.getId())
                 .toUri();
         return ResponseEntity.status(HttpStatus.OK).location(location).body(updatedEntity);
     }
 
-    @PatchMapping("/{id}")
-    public ResponseEntity<CathedraResponseDTO> patchCathedra(@PathVariable Long id, @RequestBody CathedraUpdateDTO body) {
-        var patchedEntity = cathedraService.patchCathedra(id, body);
+    @PatchMapping("/{cathedraId}")
+    public ResponseEntity<CathedraResponseDTO> patchCathedra(@PathVariable Long cathedraId, @RequestBody CathedraUpdateDTO body) {
+        var patchedEntity = cathedraService.patchCathedra(cathedraId, body);
         var location = ServletUriComponentsBuilder.fromCurrentRequest()
-                .path("/{id}")
+                .path("/{cathedraId}")
                 .buildAndExpand(patchedEntity.getId())
                 .toUri();
         return ResponseEntity.status(HttpStatus.OK).location(location).body(patchedEntity);
@@ -51,14 +51,14 @@ public class CathedraController {
         return ResponseEntity.ok(cathedraService.getAllCathedras());
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<CathedraResponseDTO> getCathedraById(@PathVariable Long id) {
-        return ResponseEntity.ok(cathedraService.getCathedraById(id));
+    @GetMapping("/{cathedraId}")
+    public ResponseEntity<CathedraResponseDTO> getCathedraById(@PathVariable Long cathedraId) {
+        return ResponseEntity.ok(cathedraService.getCathedraById(cathedraId));
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteCathedraById(@PathVariable Long id) {
-        cathedraService.deleteCathedraById(id);
+    @DeleteMapping("/{cathedraId}")
+    public ResponseEntity<?> deleteCathedraById(@PathVariable Long cathedraId) {
+        cathedraService.deleteCathedraById(cathedraId);
         return ResponseEntity.noContent().build();
     }
 }

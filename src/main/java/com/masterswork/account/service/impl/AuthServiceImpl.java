@@ -1,8 +1,9 @@
 package com.masterswork.account.service.impl;
 
+import com.masterswork.account.api.auth.dto.AuthorizationResponseDTO;
 import com.masterswork.account.api.auth.dto.SignUpRequestDTO;
 import com.masterswork.account.api.auth.dto.TokensResponseDTO;
-import com.masterswork.account.config.principal.UserPrincipalAdapter;
+import com.masterswork.account.api.dto.account.AccountResponseDTO;
 import com.masterswork.account.jwt.JwtUtil;
 import com.masterswork.account.model.Account;
 import com.masterswork.account.repository.AccountRepository;
@@ -14,10 +15,9 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
 import java.util.HashSet;
 import java.util.Set;
@@ -28,41 +28,50 @@ public class AuthServiceImpl implements AuthService {
 
     private final AccountRepository accountRepository;
     private final AccountMapper accountMapper;
-    private final UserDetailsService userDetailsService;
     private final AuthenticationManager authenticationManager;
     private final JwtUtil jwtUtil;
 
     @Transactional
     @Override
-    public TokensResponseDTO authenticateAndGenerateTokens(String username, String password) {
+    public AuthorizationResponseDTO authenticateAndGenerateTokens(String username, String password) {
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
         } catch (BadCredentialsException e) {
             throw new AuthenticationServiceException("Incorrect username or password", e);
         }
 
-        final UserDetails account = userDetailsService.loadUserByUsername(username);
-        return TokensResponseDTO.of(jwtUtil.generateAccessToken(account), jwtUtil.generateRefreshToken(account));
+        final Account account = accountRepository.findFirstByUsername(username)
+                .orElseThrow(() -> new EntityNotFoundException("No user with username " + username));
+        return generateAuthorizationResponse(account);
     }
 
     @Transactional
     @Override
-    public TokensResponseDTO refreshAccessToken(String refreshToken) {
+    public AuthorizationResponseDTO refreshAccessToken(String refreshToken) {
         String username = jwtUtil.validateAndParseToken(refreshToken).getSubject();
 
-        final UserDetails account = userDetailsService.loadUserByUsername(username);
-        return TokensResponseDTO.of(jwtUtil.generateAccessToken(account), refreshToken);
+        final Account account = accountRepository.findFirstByUsername(username)
+                .orElseThrow(() -> new EntityNotFoundException("No user with username " + username));
+        return generateAuthorizationResponse(account);
     }
 
     @Transactional
     @Override
-    public TokensResponseDTO createUser(SignUpRequestDTO signUpRequestDTO) {
+    public AuthorizationResponseDTO createUser(SignUpRequestDTO signUpRequestDTO) {
         checkIfUsernameOrEmailTaken(signUpRequestDTO.getUsername(), signUpRequestDTO.getEmail());
 
-        Account saved = accountRepository.save(accountMapper.createFrom(signUpRequestDTO));
-        UserDetails account = new UserPrincipalAdapter(saved);
+        final Account saved = accountRepository.save(accountMapper.createFrom(signUpRequestDTO));
+        return generateAuthorizationResponse(saved);
+    }
 
-        return TokensResponseDTO.of(jwtUtil.generateAccessToken(account), jwtUtil.generateRefreshToken(account));
+    private AuthorizationResponseDTO generateAuthorizationResponse(Account account) {
+        AccountResponseDTO accountDTO = accountMapper.toDto(account);
+        TokensResponseDTO tokensDTO = TokensResponseDTO.of(
+                jwtUtil.generateAccessToken(account),
+                jwtUtil.generateRefreshToken(account)
+        );
+
+        return AuthorizationResponseDTO.of(accountDTO, tokensDTO);
     }
 
     private void checkIfUsernameOrEmailTaken(String username, String email) {

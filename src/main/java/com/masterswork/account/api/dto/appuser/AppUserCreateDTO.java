@@ -1,11 +1,13 @@
 package com.masterswork.account.api.dto.appuser;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.masterswork.account.api.converter.StringToPersonTypeEnumConverter;
 import com.masterswork.account.model.enumeration.PersonType;
 import lombok.Data;
 
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import java.util.Set;
 
 @Data
 public class AppUserCreateDTO {
@@ -20,9 +22,9 @@ public class AppUserCreateDTO {
     private String fathersName;
 
     @NotNull
+    @JsonDeserialize(converter = StringToPersonTypeEnumConverter.class)
     private PersonType type;
 
+    @Min(1)
     private Long accountId;
-
-    private Set<Long> cathedrasIds;
 }
