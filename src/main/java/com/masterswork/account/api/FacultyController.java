@@ -99,14 +99,4 @@ public class FacultyController {
         return ResponseEntity.ok(cathedraService.getCathedraByFacultyIdAndCathedraId(facultyId, cathedraId));
     }
 
-    @PutMapping("/{facultyId}/cathedras/{cathedraId}")
-    public ResponseEntity<CathedraResponseDTO> assignCathedraToFaculty(@PathVariable Long facultyId, @PathVariable Long cathedraId) {
-        var updatedEntity = cathedraService.assignCathedraToFaculty(facultyId, cathedraId);
-        var location = ServletUriComponentsBuilder.fromUriString("/cathedras")
-                .path("/{id}")
-                .buildAndExpand(updatedEntity.getId())
-                .toUri();
-        return ResponseEntity.status(HttpStatus.OK).location(location).body(updatedEntity);
-    }
-
 }

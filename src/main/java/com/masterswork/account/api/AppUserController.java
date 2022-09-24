@@ -8,6 +8,7 @@ import com.masterswork.account.service.AppUserService;
 import com.masterswork.account.service.CathedraService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -55,6 +56,16 @@ public class AppUserController {
         return ResponseEntity.ok(appUserService.patchUser(userId, body));
     }
 
+    @GetMapping("/{userId}")
+    public ResponseEntity<AppUserResponseDTO> getUserById(@PathVariable Long userId) {
+        return ResponseEntity.ok(appUserService.getUserById(userId));
+    }
+
+    @GetMapping("/current")
+    public ResponseEntity<AppUserResponseDTO> getUserCurrentUser(Authentication authentication) {
+        return ResponseEntity.ok(appUserService.getUserByAccountUsername(authentication.getName()));
+    }
+
     @GetMapping
     public ResponseEntity<List<AppUserResponseDTO>> getAllAppUsers() {
         return ResponseEntity.ok(appUserService.getAllAppUsers());
@@ -68,5 +79,11 @@ public class AppUserController {
     @GetMapping("/types")
     public ResponseEntity<Set<String>> getAllUserTypes() {
         return ResponseEntity.ok(appUserService.getAllUserTypes());
+    }
+
+    @DeleteMapping("/{userId}")
+    public ResponseEntity<?> deleteUser(@PathVariable Long userId) {
+        appUserService.deleteAppUserById(userId);
+        return ResponseEntity.noContent().build();
     }
 }

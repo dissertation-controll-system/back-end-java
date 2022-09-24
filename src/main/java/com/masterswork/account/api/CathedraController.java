@@ -36,6 +36,13 @@ public class CathedraController {
         return ResponseEntity.status(HttpStatus.OK).location(location).body(updatedEntity);
     }
 
+    @PutMapping("/{cathedraId}/faculties/{facultyId}")
+    public ResponseEntity<CathedraResponseDTO> assignCathedraToFaculty(@PathVariable Long cathedraId, @PathVariable Long facultyId) {
+        var updatedEntity = cathedraService.assignCathedraToFaculty(facultyId, cathedraId);
+        var location = ServletUriComponentsBuilder.fromCurrentRequest().build().toUri();
+        return ResponseEntity.status(HttpStatus.OK).location(location).body(updatedEntity);
+    }
+
     @PatchMapping("/{cathedraId}")
     public ResponseEntity<CathedraResponseDTO> patchCathedra(@PathVariable Long cathedraId, @RequestBody CathedraUpdateDTO body) {
         var patchedEntity = cathedraService.patchCathedra(cathedraId, body);

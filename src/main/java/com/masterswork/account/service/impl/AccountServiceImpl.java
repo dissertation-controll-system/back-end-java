@@ -32,10 +32,18 @@ public class AccountServiceImpl implements AccountService {
                 .orElseThrow(() -> new EntityNotFoundException("No account with id: " + accountId));
 
         account.addRole(role);
+        return accountMapper.toDto(accountRepository.save(account));
+    }
 
-        accountRepository.save(account);
+    @Override
+    public AccountResponseDTO removeRoleFromAccount(Long accountId, Long roleId) {
+        Role role = roleRepository.findById(roleId)
+                .orElseThrow(() -> new EntityNotFoundException("No role with id: " + roleId));
+        Account account = accountRepository.findById(accountId)
+                .orElseThrow(() -> new EntityNotFoundException("No account with id: " + accountId));
 
-        return accountMapper.toDto(account);
+        account.removeRole(role);
+        return accountMapper.toDto(accountRepository.save(account));
     }
 
     @Override
@@ -45,8 +53,16 @@ public class AccountServiceImpl implements AccountService {
         Account account = accountRepository.findById(accountId)
                 .orElseThrow(() -> new EntityNotFoundException("No account with id: " + accountId));
 
-        account.setAppUser(appUser);
+        account.setUser(appUser);
+        return accountMapper.toDto(accountRepository.save(account));
+    }
 
+    @Override
+    public AccountResponseDTO unassignAppUserFromAccount(Long accountId) {
+        Account account = accountRepository.findById(accountId)
+                .orElseThrow(() -> new EntityNotFoundException("No account with id: " + accountId));
+
+        account.setUser(null);
         return accountMapper.toDto(accountRepository.save(account));
     }
 

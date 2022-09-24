@@ -7,6 +7,7 @@ import com.masterswork.account.service.RoleService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -23,14 +24,24 @@ public class AccountController {
     private final AccountService accountService;
     private final RoleService roleService;
 
-    @PutMapping ("/{accountId}/roles/{roleId}")
+    @PutMapping("/{accountId}/roles/{roleId}")
     private ResponseEntity<AccountResponseDTO> addRole(@PathVariable Long accountId, @PathVariable Long roleId) {
         return ResponseEntity.ok(accountService.addRoleToAccount(accountId, roleId));
+    }
+
+    @DeleteMapping("/{accountId}/roles/{roleId}")
+    private ResponseEntity<AccountResponseDTO> removeRole(@PathVariable Long accountId, @PathVariable Long roleId) {
+        return ResponseEntity.ok(accountService.removeRoleFromAccount(accountId, roleId));
     }
 
     @PutMapping("/{accountId}/app-users/{appUserId}")
     private ResponseEntity<AccountResponseDTO> addAppUser(@PathVariable Long accountId, @PathVariable Long appUserId) {
         return ResponseEntity.ok(accountService.addAppUserToAccount(accountId, appUserId));
+    }
+
+    @DeleteMapping("/{accountId}/app-users")
+    private ResponseEntity<AccountResponseDTO> unassignAppUser(@PathVariable Long accountId) {
+        return ResponseEntity.ok(accountService.unassignAppUserFromAccount(accountId));
     }
 
     @GetMapping

@@ -90,11 +90,9 @@ public class Account extends AuditedEntity {
         return this;
     }
 
-    public Account setAppUser(AppUser appUser) {
-        if (this.user != null) user.setAccount(null);
-
-        this.user = appUser;
-        appUser.setAccount(this);
+    public Account removeRole(Role role) {
+        roles.remove(role);
+        role.getAccounts().remove(this);
         return this;
     }
 }

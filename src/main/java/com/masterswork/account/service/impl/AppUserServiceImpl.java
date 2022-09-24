@@ -6,7 +6,6 @@ import com.masterswork.account.api.dto.appuser.AppUserUpdateDTO;
 import com.masterswork.account.model.AppUser;
 import com.masterswork.account.model.Cathedra;
 import com.masterswork.account.model.enumeration.PersonType;
-import com.masterswork.account.repository.AccountRepository;
 import com.masterswork.account.repository.AppUserRepository;
 import com.masterswork.account.repository.CathedraRepository;
 import com.masterswork.account.service.AppUserService;
@@ -24,7 +23,6 @@ public class AppUserServiceImpl implements AppUserService {
 
     private final AppUserRepository appUserRepository;
     private final CathedraRepository cathedraRepository;
-    private final AccountRepository accountRepository;
     private final AppUserMapper appUserMapper;
 
     @Override
@@ -78,6 +76,20 @@ public class AppUserServiceImpl implements AppUserService {
     }
 
     @Override
+    public AppUserResponseDTO getUserById(Long userId) {
+        return appUserRepository.findById(userId)
+                .map(appUserMapper::toDto)
+                .orElseThrow(() -> new EntityNotFoundException("No appUser with id: " + userId));
+    }
+
+    @Override
+    public AppUserResponseDTO getUserByAccountUsername(String username) {
+        return appUserRepository.findByAccount_Username(username)
+                .map(appUserMapper::toDto)
+                .orElseThrow(() -> new EntityNotFoundException("No appUser associated with username: " + username));
+    }
+
+    @Override
     public List<AppUserResponseDTO> getAllAppUsers() {
         return appUserMapper.toDto(appUserRepository.findAll());
     }
@@ -87,4 +99,11 @@ public class AppUserServiceImpl implements AppUserService {
         return PersonType.getAllTypesNames();
     }
 
+    @Override
+    public void deleteAppUserById(Long userId) {
+        AppUser appUser = appUserRepository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException("No appUser with id: " + userId));
+
+        appUserRepository.delete(appUser);
+    }
 }

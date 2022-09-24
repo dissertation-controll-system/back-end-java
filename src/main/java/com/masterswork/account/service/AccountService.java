@@ -8,7 +8,11 @@ public interface AccountService {
 
     AccountResponseDTO addRoleToAccount(Long accountId, Long roleId);
 
+    AccountResponseDTO removeRoleFromAccount(Long accountId, Long roleId);
+
     AccountResponseDTO addAppUserToAccount(Long accountId, Long appUserId);
+
+    AccountResponseDTO unassignAppUserFromAccount(Long accountId);
 
     List<AccountResponseDTO> getAllAccounts();
 

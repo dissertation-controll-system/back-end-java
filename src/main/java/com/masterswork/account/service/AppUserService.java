@@ -19,7 +19,13 @@ public interface AppUserService {
 
     AppUserResponseDTO patchUser(Long userId, AppUserUpdateDTO appUserUpdateDTO);
 
+    AppUserResponseDTO getUserById(Long userId);
+
+    AppUserResponseDTO getUserByAccountUsername(String username);
+
     List<AppUserResponseDTO> getAllAppUsers();
 
     Set<String> getAllUserTypes();
+
+    void deleteAppUserById(Long userId);
 }
