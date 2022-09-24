@@ -13,6 +13,7 @@ public interface CathedraService {
     List<CathedraResponseDTO> getAllCathedras();
 
     List<CathedraResponseDTO> getAllCathedrasByAppUserId(Long appUserId);
+
     List<CathedraResponseDTO> findAllCathedrasByFacultyId(Long facultyId);
 
     CathedraResponseDTO updateCathedra(Long cathedraId, CathedraUpdateDTO cathedraUpdateDTO);

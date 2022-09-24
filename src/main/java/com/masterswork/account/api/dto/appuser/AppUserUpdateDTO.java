@@ -9,7 +9,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 @Data
-public class AppUserCreateDTO {
+public class AppUserUpdateDTO {
 
     @NotBlank
     private String firstName;
@@ -23,4 +23,5 @@ public class AppUserCreateDTO {
     @NotNull
     @JsonDeserialize(converter = StringToPersonTypeEnumConverter.class)
     private PersonType type;
+
 }

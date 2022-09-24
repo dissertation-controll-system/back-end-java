@@ -68,4 +68,10 @@ public class AppUser extends AuditedEntity {
         cathedra.getUsers().add(this);
         return this;
     }
+
+    public AppUser removeCathedra(Cathedra cathedra) {
+        cathedras.remove(cathedra);
+        cathedra.getUsers().remove(this);
+        return this;
+    }
 }

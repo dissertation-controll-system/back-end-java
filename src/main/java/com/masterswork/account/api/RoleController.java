@@ -38,9 +38,9 @@ public class RoleController {
         return ResponseEntity.created(location).body(newEntity);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<RoleResponseDTO> updateRole(@PathVariable Long id, @Valid @RequestBody RoleUpdateDTO body) {
-        var updatedEntity = roleService.updateRole(id, body);
+    @PutMapping("/{roleId}")
+    public ResponseEntity<RoleResponseDTO> updateRole(@PathVariable Long roleId, @Valid @RequestBody RoleUpdateDTO body) {
+        var updatedEntity = roleService.updateRole(roleId, body);
         var location = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}")
                 .buildAndExpand(updatedEntity.getId())
@@ -48,9 +48,9 @@ public class RoleController {
         return ResponseEntity.status(HttpStatus.OK).location(location).body(updatedEntity);
     }
 
-    @PatchMapping("/{id}")
-    public ResponseEntity<RoleResponseDTO> patchRole(@PathVariable Long id, @RequestBody RoleUpdateDTO body) {
-        var patchedEntity = roleService.patchRole(id, body);
+    @PatchMapping("/{roleId}")
+    public ResponseEntity<RoleResponseDTO> patchRole(@PathVariable Long roleId, @RequestBody RoleUpdateDTO body) {
+        var patchedEntity = roleService.patchRole(roleId, body);
         var location = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}")
                 .buildAndExpand(patchedEntity.getId())
@@ -63,14 +63,14 @@ public class RoleController {
         return ResponseEntity.ok(roleService.getAllRoles());
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<RoleResponseDTO> getRole(@PathVariable Long id) {
-        return ResponseEntity.ok(roleService.getRole(id));
+    @GetMapping("/{roleId}")
+    public ResponseEntity<RoleResponseDTO> getRole(@PathVariable Long roleId) {
+        return ResponseEntity.ok(roleService.getRole(roleId));
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteRole(@PathVariable Long id) {
-        roleService.deleteRole(id);
+    @DeleteMapping("/{roleId}")
+    public ResponseEntity<?> deleteRole(@PathVariable Long roleId) {
+        roleService.deleteRole(roleId);
         return ResponseEntity.noContent().build();
     }
 

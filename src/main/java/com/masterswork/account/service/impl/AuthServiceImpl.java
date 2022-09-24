@@ -12,8 +12,6 @@ import com.masterswork.account.service.exception.UserExistsException;
 import com.masterswork.account.service.mapper.AccountMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.AuthenticationServiceException;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Service;
 
@@ -34,15 +32,11 @@ public class AuthServiceImpl implements AuthService {
     @Transactional
     @Override
     public AuthorizationResponseDTO authenticateAndGenerateTokens(String username, String password) {
-        try {
-            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
-        } catch (BadCredentialsException e) {
-            throw new AuthenticationServiceException("Incorrect username or password", e);
-        }
+        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
 
-        final Account account = accountRepository.findFirstByUsername(username)
+        return accountRepository.findFirstByUsername(username)
+                .map(this::generateAuthorizationResponse)
                 .orElseThrow(() -> new EntityNotFoundException("No user with username " + username));
-        return generateAuthorizationResponse(account);
     }
 
     @Transactional
@@ -50,9 +44,9 @@ public class AuthServiceImpl implements AuthService {
     public AuthorizationResponseDTO refreshAccessToken(String refreshToken) {
         String username = jwtUtil.validateAndParseToken(refreshToken).getSubject();
 
-        final Account account = accountRepository.findFirstByUsername(username)
+        return accountRepository.findFirstByUsername(username)
+                .map(this::generateAuthorizationResponse)
                 .orElseThrow(() -> new EntityNotFoundException("No user with username " + username));
-        return generateAuthorizationResponse(account);
     }
 
     @Transactional
@@ -62,16 +56,6 @@ public class AuthServiceImpl implements AuthService {
 
         final Account saved = accountRepository.save(accountMapper.createFrom(signUpRequestDTO));
         return generateAuthorizationResponse(saved);
-    }
-
-    private AuthorizationResponseDTO generateAuthorizationResponse(Account account) {
-        AccountResponseDTO accountDTO = accountMapper.toDto(account);
-        TokensResponseDTO tokensDTO = TokensResponseDTO.of(
-                jwtUtil.generateAccessToken(account),
-                jwtUtil.generateRefreshToken(account)
-        );
-
-        return AuthorizationResponseDTO.of(accountDTO, tokensDTO);
     }
 
     private void checkIfUsernameOrEmailTaken(String username, String email) {
@@ -86,4 +70,15 @@ public class AuthServiceImpl implements AuthService {
             throw new UserExistsException(String.join(" ", messages));
         }
     }
+
+    private AuthorizationResponseDTO generateAuthorizationResponse(Account account) {
+        AccountResponseDTO accountDTO = accountMapper.toDto(account);
+        TokensResponseDTO tokensDTO = TokensResponseDTO.of(
+                jwtUtil.generateAccessToken(account),
+                jwtUtil.generateRefreshToken(account)
+        );
+
+        return AuthorizationResponseDTO.of(accountDTO, tokensDTO);
+    }
+
 }

@@ -6,7 +6,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 
 @Getter
@@ -19,6 +18,4 @@ public class CathedraUpdateDTO {
     @NotBlank
     private String name;
 
-    @Min(1)
-    private Long facultyId;
 }
