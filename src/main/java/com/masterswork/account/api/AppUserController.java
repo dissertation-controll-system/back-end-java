@@ -47,7 +47,7 @@ public class AppUserController {
     }
 
     @PutMapping("/{userId}")
-    public ResponseEntity<AppUserResponseDTO> updateUser(@PathVariable Long userId, @RequestBody AppUserUpdateDTO body) {
+    public ResponseEntity<AppUserResponseDTO> updateUser(@PathVariable Long userId, @Valid @RequestBody AppUserUpdateDTO body) {
         return ResponseEntity.ok(appUserService.updateUser(userId, body));
     }
 

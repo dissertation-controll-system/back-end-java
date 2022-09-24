@@ -3,9 +3,11 @@ package com.masterswork.account.service.impl;
 import com.masterswork.account.api.dto.appuser.AppUserCreateDTO;
 import com.masterswork.account.api.dto.appuser.AppUserResponseDTO;
 import com.masterswork.account.api.dto.appuser.AppUserUpdateDTO;
+import com.masterswork.account.model.Account;
 import com.masterswork.account.model.AppUser;
 import com.masterswork.account.model.Cathedra;
 import com.masterswork.account.model.enumeration.PersonType;
+import com.masterswork.account.repository.AccountRepository;
 import com.masterswork.account.repository.AppUserRepository;
 import com.masterswork.account.repository.CathedraRepository;
 import com.masterswork.account.service.AppUserService;
@@ -22,8 +24,19 @@ import java.util.Set;
 public class AppUserServiceImpl implements AppUserService {
 
     private final AppUserRepository appUserRepository;
+    private final AccountRepository accountRepository;
     private final CathedraRepository cathedraRepository;
     private final AppUserMapper appUserMapper;
+
+    @Override
+    public AppUserResponseDTO createAppUserForAccount(Long accountId, AppUserCreateDTO appUserCreateDTO) {
+        Account account = accountRepository.findById(accountId)
+                .orElseThrow(() -> new EntityNotFoundException("No account with id: " + accountId));
+        AppUser appUser = appUserMapper.createFrom(appUserCreateDTO);
+
+        account.setUser(appUser);
+        return appUserMapper.toDto(appUser);
+    }
 
     @Override
     public AppUserResponseDTO assignCathedra(Long userId, Long cathedraId) {

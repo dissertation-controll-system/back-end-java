@@ -1,6 +1,7 @@
 package com.masterswork.account.service.impl;
 
 import com.masterswork.account.api.dto.account.AccountResponseDTO;
+import com.masterswork.account.api.dto.account.AccountUpdateDTO;
 import com.masterswork.account.model.Account;
 import com.masterswork.account.model.AppUser;
 import com.masterswork.account.model.Role;
@@ -23,6 +24,24 @@ public class AccountServiceImpl implements AccountService {
     private final AppUserRepository appUserRepository;
     private final RoleRepository roleRepository;
     private final AccountMapper accountMapper;
+
+    @Override
+    public AccountResponseDTO updateAccount(Long accountId, AccountUpdateDTO accountUpdateDTO) {
+        Account account = accountRepository.findById(accountId)
+                .orElseThrow(() -> new EntityNotFoundException("No account with id: " + accountId));
+
+        accountMapper.updateFrom(account, accountUpdateDTO);
+        return accountMapper.toDto(accountRepository.save(account));
+    }
+
+    @Override
+    public AccountResponseDTO patchAccount(Long accountId, AccountUpdateDTO accountUpdateDTO) {
+        Account account = accountRepository.findById(accountId)
+                .orElseThrow(() -> new EntityNotFoundException("No account with id: " + accountId));
+
+        accountMapper.patchFrom(account, accountUpdateDTO);
+        return accountMapper.toDto(accountRepository.save(account));
+    }
 
     @Override
     public AccountResponseDTO addRoleToAccount(Long accountId, Long roleId) {

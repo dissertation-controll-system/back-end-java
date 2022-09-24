@@ -9,6 +9,8 @@ import java.util.Set;
 
 public interface AppUserService {
 
+    AppUserResponseDTO createAppUserForAccount(Long accountId, AppUserCreateDTO appUserCreateDTO);
+
     AppUserResponseDTO assignCathedra(Long userId, Long cathedraId);
 
     AppUserResponseDTO unassignCathedra(Long userId, Long cathedraId);
