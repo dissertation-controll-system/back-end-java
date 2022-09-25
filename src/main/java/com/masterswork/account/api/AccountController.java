@@ -8,6 +8,7 @@ import com.masterswork.account.api.dto.role.RoleResponseDTO;
 import com.masterswork.account.service.AccountService;
 import com.masterswork.account.service.AppUserService;
 import com.masterswork.account.service.RoleService;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -33,70 +34,80 @@ public class AccountController {
     private final AppUserService appUserService;
     private final RoleService roleService;
 
-    @PostMapping("/{accountId}/app-users")
-    private ResponseEntity<AppUserResponseDTO> createAppUserForAccount(
-            @PathVariable Long accountId, @Valid @RequestBody AppUserCreateDTO body) {
+    @Operation(summary = "Create new appUser and assign to account")
+    @PostMapping(path = "/{accountId}/app-users", consumes = "application/json", produces = "application/json")
+    private ResponseEntity<AppUserResponseDTO> createAppUserForAccount(@PathVariable Long accountId, @Valid @RequestBody AppUserCreateDTO body) {
         return ResponseEntity.ok(appUserService.createAppUserForAccount(accountId, body));
     }
 
-    @PutMapping("/{accountId}")
-    private ResponseEntity<AccountResponseDTO> updateAccount(
-            @PathVariable Long accountId, @Valid @RequestBody AccountUpdateDTO body) {
+    @Operation(summary = "Update account by accountId")
+    @PutMapping(path = "/{accountId}", consumes = "application/json", produces = "application/json")
+    private ResponseEntity<AccountResponseDTO> updateAccount(@PathVariable Long accountId, @Valid @RequestBody AccountUpdateDTO body) {
         return ResponseEntity.ok(accountService.updateAccount(accountId, body));
     }
 
-    @PatchMapping("/{accountId}")
-    private ResponseEntity<AccountResponseDTO> patchAccount(
-            @PathVariable Long accountId, @RequestBody AccountUpdateDTO body) {
+    @Operation(summary = "Patch account by accountId")
+    @PatchMapping(path = "/{accountId}", consumes = "application/json", produces = "application/json")
+    private ResponseEntity<AccountResponseDTO> patchAccount(@PathVariable Long accountId, @RequestBody AccountUpdateDTO body) {
         return ResponseEntity.ok(accountService.patchAccount(accountId, body));
     }
 
-    @PutMapping("/{accountId}/roles/{roleId}")
+    @Operation(summary = "Add role to account")
+    @PutMapping(path = "/{accountId}/roles/{roleId}", consumes = "application/json", produces = "application/json")
     private ResponseEntity<AccountResponseDTO> addRole(@PathVariable Long accountId, @PathVariable Long roleId) {
         return ResponseEntity.ok(accountService.addRoleToAccount(accountId, roleId));
     }
 
-    @DeleteMapping("/{accountId}/roles/{roleId}")
+    @Operation(summary = "Remove role from account")
+    @DeleteMapping(path = "/{accountId}/roles/{roleId}", consumes = "application/json", produces = "application/json")
     private ResponseEntity<AccountResponseDTO> removeRole(@PathVariable Long accountId, @PathVariable Long roleId) {
         return ResponseEntity.ok(accountService.removeRoleFromAccount(accountId, roleId));
     }
 
-    @PutMapping("/{accountId}/app-users/{appUserId}")
+    @Operation(summary = "Assign appUser to account")
+    @PutMapping(path = "/{accountId}/app-users/{appUserId}", consumes = "application/json", produces = "application/json")
     private ResponseEntity<AccountResponseDTO> addAppUser(@PathVariable Long accountId, @PathVariable Long appUserId) {
         return ResponseEntity.ok(accountService.addAppUserToAccount(accountId, appUserId));
     }
 
-    @DeleteMapping("/{accountId}/app-users")
+    @Operation(summary = "Unassign appUser from account")
+    @DeleteMapping(path = "/{accountId}/app-users", consumes = "application/json", produces = "application/json")
     private ResponseEntity<AccountResponseDTO> unassignAppUser(@PathVariable Long accountId) {
         return ResponseEntity.ok(accountService.unassignAppUserFromAccount(accountId));
     }
 
-    @GetMapping
+    @Operation(summary = "Get all accounts")
+    @GetMapping(consumes = "application/json", produces = "application/json")
     private ResponseEntity<List<AccountResponseDTO>> getAllAccounts() {
         return ResponseEntity.ok(accountService.getAllAccounts());
     }
 
-    @GetMapping("/current")
+    @Operation(summary = "Get account of the current user")
+    @GetMapping(path = "/current", consumes = "application/json", produces = "application/json")
     private ResponseEntity<AccountResponseDTO> getMyAccount(Authentication authentication) {
         return ResponseEntity.ok(accountService.getAccountByUsername(authentication.getName()));
     }
 
-    @GetMapping("/username/{username}")
+    @Operation(summary = "Get account by username")
+    @GetMapping(path = "/username/{username}", consumes = "application/json", produces = "application/json")
     private ResponseEntity<AccountResponseDTO> getAccountByUsername(@PathVariable String username) {
         return ResponseEntity.ok(accountService.getAccountByUsername(username));
     }
 
-    @GetMapping("/{accountId}")
+    @Operation(summary = "Get account by accountId")
+    @GetMapping(path = "/{accountId}", consumes = "application/json", produces = "application/json")
     private ResponseEntity<AccountResponseDTO> getAccountById(@PathVariable Long accountId) {
         return ResponseEntity.ok(accountService.getAccountById(accountId));
     }
 
-    @GetMapping("/{accountId}/roles")
+    @Operation(summary = "Get roles assigned to account by accountId")
+    @GetMapping(path = "/{accountId}/roles", consumes = "application/json", produces = "application/json")
     private ResponseEntity<List<RoleResponseDTO>> getAllRolesForAccount(@PathVariable Long accountId) {
         return ResponseEntity.ok(roleService.getAllRolesByAccountId(accountId));
     }
 
-    @GetMapping("/username/{username}/roles")
+    @Operation(summary = "Get roles assigned to account by username")
+    @GetMapping(path = "/username/{username}/roles", consumes = "application/json", produces = "application/json")
     private ResponseEntity<List<RoleResponseDTO>> getAllRolesForAccountByUsername(@PathVariable String username) {
         return ResponseEntity.ok(roleService.getAllRolesByUsername(username));
     }

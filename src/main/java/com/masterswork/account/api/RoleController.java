@@ -4,6 +4,7 @@ import com.masterswork.account.api.dto.role.RoleCreateDTO;
 import com.masterswork.account.api.dto.role.RoleResponseDTO;
 import com.masterswork.account.api.dto.role.RoleUpdateDTO;
 import com.masterswork.account.service.RoleService;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,7 +29,8 @@ public class RoleController {
 
     private final RoleService roleService;
 
-    @PostMapping
+    @Operation(summary = "Create new role")
+    @PostMapping(consumes = "application/json", produces = "application/json")
     public ResponseEntity<RoleResponseDTO> createRole(@Valid @RequestBody RoleCreateDTO body) {
         var newEntity = roleService.createRole(body);
         var location = ServletUriComponentsBuilder.fromCurrentRequest()
@@ -38,7 +40,8 @@ public class RoleController {
         return ResponseEntity.created(location).body(newEntity);
     }
 
-    @PutMapping("/{roleId}")
+    @Operation(summary = "Update role by roleId")
+    @PutMapping(path = "/{roleId}", consumes = "application/json", produces = "application/json")
     public ResponseEntity<RoleResponseDTO> updateRole(@PathVariable Long roleId, @Valid @RequestBody RoleUpdateDTO body) {
         var updatedEntity = roleService.updateRole(roleId, body);
         var location = ServletUriComponentsBuilder.fromCurrentRequest()
@@ -48,7 +51,8 @@ public class RoleController {
         return ResponseEntity.status(HttpStatus.OK).location(location).body(updatedEntity);
     }
 
-    @PatchMapping("/{roleId}")
+    @Operation(summary = "Patch role by roleId")
+    @PatchMapping(path = "/{roleId}", consumes = "application/json", produces = "application/json")
     public ResponseEntity<RoleResponseDTO> patchRole(@PathVariable Long roleId, @RequestBody RoleUpdateDTO body) {
         var patchedEntity = roleService.patchRole(roleId, body);
         var location = ServletUriComponentsBuilder.fromCurrentRequest()
@@ -58,17 +62,20 @@ public class RoleController {
         return ResponseEntity.status(HttpStatus.OK).location(location).body(patchedEntity);
     }
 
-    @GetMapping
+    @Operation(summary = "Get all roles")
+    @GetMapping(consumes = "application/json", produces = "application/json")
     public ResponseEntity<List<RoleResponseDTO>> getAllRoles() {
         return ResponseEntity.ok(roleService.getAllRoles());
     }
 
-    @GetMapping("/{roleId}")
+    @Operation(summary = "Get role by roleId")
+    @GetMapping(path = "/{roleId}", consumes = "application/json", produces = "application/json")
     public ResponseEntity<RoleResponseDTO> getRole(@PathVariable Long roleId) {
         return ResponseEntity.ok(roleService.getRole(roleId));
     }
 
-    @DeleteMapping("/{roleId}")
+    @Operation(summary = "Delete role by roleId")
+    @DeleteMapping(path = "/{roleId}", consumes = "application/json", produces = "application/json")
     public ResponseEntity<?> deleteRole(@PathVariable Long roleId) {
         roleService.deleteRole(roleId);
         return ResponseEntity.noContent().build();

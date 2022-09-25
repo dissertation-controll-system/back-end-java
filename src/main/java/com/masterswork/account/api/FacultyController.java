@@ -7,6 +7,7 @@ import com.masterswork.account.api.dto.faculty.FacultyResponseDTO;
 import com.masterswork.account.api.dto.faculty.FacultyUpdateDTO;
 import com.masterswork.account.service.CathedraService;
 import com.masterswork.account.service.FacultyService;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -32,7 +33,8 @@ public class FacultyController {
     private final FacultyService facultyService;
     private final CathedraService cathedraService;
 
-    @PostMapping
+    @Operation(summary = "Create new faculty")
+    @PostMapping(consumes = "application/json", produces = "application/json")
     public ResponseEntity<FacultyResponseDTO> createFaculty(@Valid @RequestBody FacultyCreateDTO body) {
         var newEntity = facultyService.createFaculty(body);
         var location = ServletUriComponentsBuilder.fromCurrentRequest()
@@ -42,17 +44,20 @@ public class FacultyController {
         return ResponseEntity.created(location).body(newEntity);
     }
 
-    @GetMapping
+    @Operation(summary = "Get all faculties")
+    @GetMapping(consumes = "application/json", produces = "application/json")
     public ResponseEntity<List<FacultyResponseDTO>> getAllFaculties() {
         return ResponseEntity.ok(facultyService.getAllFaculties());
     }
 
-    @GetMapping("/{facultyId}")
+    @Operation(summary = "Get faculty by facultyId")
+    @GetMapping(path = "/{facultyId}", consumes = "application/json", produces = "application/json")
     public ResponseEntity<FacultyResponseDTO> getFaculty(@PathVariable Long facultyId) {
         return ResponseEntity.ok(facultyService.getFaculty(facultyId));
     }
 
-    @PutMapping("/{facultyId}")
+    @Operation(summary = "Update faculty by facultyId")
+    @PutMapping(path = "/{facultyId}", consumes = "application/json", produces = "application/json")
     public ResponseEntity<FacultyResponseDTO> updateFaculty(@PathVariable Long facultyId, @Valid @RequestBody FacultyUpdateDTO body) {
         var updatedEntity = facultyService.updateFaculty(facultyId, body);
         var location = ServletUriComponentsBuilder.fromCurrentRequest()
@@ -62,7 +67,8 @@ public class FacultyController {
         return ResponseEntity.status(HttpStatus.OK).location(location).body(updatedEntity);
     }
 
-    @PatchMapping("/{facultyId}")
+    @Operation(summary = "Patch faculty by facultyId")
+    @PatchMapping(path = "/{facultyId}", consumes = "application/json", produces = "application/json")
     public ResponseEntity<FacultyResponseDTO> patchFaculty(@PathVariable Long facultyId, @RequestBody FacultyUpdateDTO body) {
         var patchedEntity = facultyService.patchFaculty(facultyId, body);
         var location = ServletUriComponentsBuilder.fromCurrentRequest()
@@ -72,13 +78,15 @@ public class FacultyController {
         return ResponseEntity.status(HttpStatus.OK).location(location).body(patchedEntity);
     }
 
-    @DeleteMapping("/{facultyId}")
+    @Operation(summary = "Delete faculty by facultyId")
+    @DeleteMapping(path = "/{facultyId}", consumes = "application/json", produces = "application/json")
     public ResponseEntity<?> deleteFaculty(@PathVariable Long facultyId) {
         facultyService.deleteFaculty(facultyId);
         return ResponseEntity.noContent().build();
     }
 
-    @PostMapping("/{facultyId}/cathedras")
+    @Operation(summary = "Create new cathedra and assign to faculty by facultyId")
+    @PostMapping(path = "/{facultyId}/cathedras", consumes = "application/json", produces = "application/json")
     public ResponseEntity<CathedraResponseDTO> addCathedra(@PathVariable Long facultyId, @Valid @RequestBody CathedraCreateDTO body) {
         var newEntity = cathedraService.createCathedraByFacultyId(facultyId, body);
         var location = ServletUriComponentsBuilder.fromUriString("/cathedras")
@@ -88,12 +96,14 @@ public class FacultyController {
         return ResponseEntity.created(location).body(newEntity);
     }
 
-    @GetMapping("/{facultyId}/cathedras")
+    @Operation(summary = "Get all cathedras assigned to faculty by facultyId")
+    @GetMapping(path = "/{facultyId}/cathedras", consumes = "application/json", produces = "application/json")
     public ResponseEntity<List<CathedraResponseDTO>> getCathedrasByFacultyId(@PathVariable Long facultyId) {
         return ResponseEntity.ok(cathedraService.findAllCathedrasByFacultyId(facultyId));
     }
 
-    @GetMapping("/{facultyId}/cathedras/{cathedraId}")
+    @Operation(summary = "Get cathedra by facultyId and cathedraId ")
+    @GetMapping(path = "/{facultyId}/cathedras/{cathedraId}", consumes = "application/json", produces = "application/json")
     public ResponseEntity<CathedraResponseDTO> getCathedraByFacultyIdAndCathedraId(
             @PathVariable Long facultyId, @PathVariable Long cathedraId) {
         return ResponseEntity.ok(cathedraService.getCathedraByFacultyIdAndCathedraId(facultyId, cathedraId));

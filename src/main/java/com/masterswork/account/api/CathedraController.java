@@ -3,6 +3,7 @@ package com.masterswork.account.api;
 import com.masterswork.account.api.dto.cathedra.CathedraResponseDTO;
 import com.masterswork.account.api.dto.cathedra.CathedraUpdateDTO;
 import com.masterswork.account.service.CathedraService;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,7 +27,8 @@ public class CathedraController {
 
     private final CathedraService cathedraService;
 
-    @PutMapping("/{cathedraId}")
+    @Operation(summary = "Update cathedra by cathedraId")
+    @PutMapping(path = "/{cathedraId}", consumes = "application/json", produces = "application/json")
     public ResponseEntity<CathedraResponseDTO> updateCathedra(@PathVariable Long cathedraId, @Valid @RequestBody CathedraUpdateDTO body) {
         var updatedEntity = cathedraService.updateCathedra(cathedraId, body);
         var location = ServletUriComponentsBuilder.fromCurrentRequest()
@@ -36,14 +38,8 @@ public class CathedraController {
         return ResponseEntity.status(HttpStatus.OK).location(location).body(updatedEntity);
     }
 
-    @PutMapping("/{cathedraId}/faculties/{facultyId}")
-    public ResponseEntity<CathedraResponseDTO> assignCathedraToFaculty(@PathVariable Long cathedraId, @PathVariable Long facultyId) {
-        var updatedEntity = cathedraService.assignCathedraToFaculty(facultyId, cathedraId);
-        var location = ServletUriComponentsBuilder.fromCurrentRequest().build().toUri();
-        return ResponseEntity.status(HttpStatus.OK).location(location).body(updatedEntity);
-    }
-
-    @PatchMapping("/{cathedraId}")
+    @Operation(summary = "Patch cathedra by cathedraId")
+    @PatchMapping(path = "/{cathedraId}", consumes = "application/json", produces = "application/json")
     public ResponseEntity<CathedraResponseDTO> patchCathedra(@PathVariable Long cathedraId, @RequestBody CathedraUpdateDTO body) {
         var patchedEntity = cathedraService.patchCathedra(cathedraId, body);
         var location = ServletUriComponentsBuilder.fromCurrentRequest()
@@ -53,17 +49,28 @@ public class CathedraController {
         return ResponseEntity.status(HttpStatus.OK).location(location).body(patchedEntity);
     }
 
-    @GetMapping
+    @Operation(summary = "Assign cathedra to faculty")
+    @PutMapping(path = "/{cathedraId}/faculties/{facultyId}", consumes = "application/json", produces = "application/json")
+    public ResponseEntity<CathedraResponseDTO> assignCathedraToFaculty(@PathVariable Long cathedraId, @PathVariable Long facultyId) {
+        var updatedEntity = cathedraService.assignCathedraToFaculty(facultyId, cathedraId);
+        var location = ServletUriComponentsBuilder.fromCurrentRequest().build().toUri();
+        return ResponseEntity.status(HttpStatus.OK).location(location).body(updatedEntity);
+    }
+
+    @Operation(summary = "Get all cathedras")
+    @GetMapping(consumes = "application/json", produces = "application/json")
     public ResponseEntity<List<CathedraResponseDTO>> getAllCathedras() {
         return ResponseEntity.ok(cathedraService.getAllCathedras());
     }
 
-    @GetMapping("/{cathedraId}")
+    @Operation(summary = "Get cathedra by cathedraId")
+    @GetMapping(path = "/{cathedraId}", consumes = "application/json", produces = "application/json")
     public ResponseEntity<CathedraResponseDTO> getCathedraById(@PathVariable Long cathedraId) {
         return ResponseEntity.ok(cathedraService.getCathedraById(cathedraId));
     }
 
-    @DeleteMapping("/{cathedraId}")
+    @Operation(summary = "Delete cathedra by cathedraId")
+    @DeleteMapping(path = "/{cathedraId}", consumes = "application/json", produces = "application/json")
     public ResponseEntity<?> deleteCathedraById(@PathVariable Long cathedraId) {
         cathedraService.deleteCathedraById(cathedraId);
         return ResponseEntity.noContent().build();
