@@ -2,8 +2,8 @@ package com.masterswork.account.service;
 
 import com.masterswork.account.api.dto.account.AccountResponseDTO;
 import com.masterswork.account.api.dto.account.AccountUpdateDTO;
-
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 public interface AccountService {
 
@@ -19,7 +19,7 @@ public interface AccountService {
 
     AccountResponseDTO unassignAppUserFromAccount(Long accountId);
 
-    List<AccountResponseDTO> getAllAccounts();
+    Page<AccountResponseDTO> getAllAccounts(Pageable pageable);
 
     AccountResponseDTO getAccountByUsername(String username);
 

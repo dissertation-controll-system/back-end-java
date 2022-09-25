@@ -3,18 +3,18 @@ package com.masterswork.account.service;
 import com.masterswork.account.api.dto.cathedra.CathedraCreateDTO;
 import com.masterswork.account.api.dto.cathedra.CathedraResponseDTO;
 import com.masterswork.account.api.dto.cathedra.CathedraUpdateDTO;
-
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 public interface CathedraService {
 
     CathedraResponseDTO createCathedraByFacultyId(Long facultyId, CathedraCreateDTO cathedraCreateDTO);
 
-    List<CathedraResponseDTO> getAllCathedras();
+    Page<CathedraResponseDTO> getAllCathedras(Pageable pageable);
 
-    List<CathedraResponseDTO> getAllCathedrasByAppUserId(Long appUserId);
+    Page<CathedraResponseDTO> getAllCathedrasByAppUserId(Long appUserId, Pageable pageable);
 
-    List<CathedraResponseDTO> findAllCathedrasByFacultyId(Long facultyId);
+    Page<CathedraResponseDTO> findAllCathedrasByFacultyId(Long facultyId, Pageable pageable);
 
     CathedraResponseDTO updateCathedra(Long cathedraId, CathedraUpdateDTO cathedraUpdateDTO);
 

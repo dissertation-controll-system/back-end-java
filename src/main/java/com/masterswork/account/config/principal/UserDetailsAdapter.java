@@ -11,7 +11,7 @@ import java.util.Collection;
 import java.util.stream.Collectors;
 
 @AllArgsConstructor
-public class UserPrincipalAdapter implements UserDetails {
+public class UserDetailsAdapter implements UserDetails {
 
     private Account account;
 

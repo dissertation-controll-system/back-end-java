@@ -3,8 +3,8 @@ package com.masterswork.account.service;
 import com.masterswork.account.api.dto.role.RoleCreateDTO;
 import com.masterswork.account.api.dto.role.RoleResponseDTO;
 import com.masterswork.account.api.dto.role.RoleUpdateDTO;
-
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 public interface RoleService {
 
@@ -14,11 +14,11 @@ public interface RoleService {
 
     RoleResponseDTO patchRole(Long id, RoleUpdateDTO facultyResponseDTO);
 
-    List<RoleResponseDTO> getAllRoles();
+    Page<RoleResponseDTO> getAllRoles(Pageable pageable);
 
-    List<RoleResponseDTO> getAllRolesByAccountId(Long accountId);
+    Page<RoleResponseDTO> getAllRolesByAccountId(Long accountId, Pageable pageable);
 
-    List<RoleResponseDTO> getAllRolesByUsername(String username);
+    Page<RoleResponseDTO> getAllRolesByUsername(String username, Pageable pageable);
 
     RoleResponseDTO getRole(Long id);
 

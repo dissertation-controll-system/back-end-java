@@ -3,8 +3,8 @@ package com.masterswork.account.service;
 import com.masterswork.account.api.dto.faculty.FacultyCreateDTO;
 import com.masterswork.account.api.dto.faculty.FacultyResponseDTO;
 import com.masterswork.account.api.dto.faculty.FacultyUpdateDTO;
-
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 public interface FacultyService {
 
@@ -14,7 +14,7 @@ public interface FacultyService {
 
     FacultyResponseDTO patchFaculty(Long id, FacultyUpdateDTO facultyResponseDTO);
 
-    List<FacultyResponseDTO> getAllFaculties();
+    Page<FacultyResponseDTO> getAllFaculties(Pageable pageable);
 
     FacultyResponseDTO getFaculty(Long id);
 

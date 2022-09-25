@@ -8,10 +8,11 @@ import com.masterswork.account.repository.FacultyRepository;
 import com.masterswork.account.service.FacultyService;
 import com.masterswork.account.service.mapper.FacultyMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -43,9 +44,8 @@ public class FacultyServiceImpl implements FacultyService {
     }
 
     @Override
-    public List<FacultyResponseDTO> getAllFaculties() {
-        List<Faculty> all = facultyRepository.findAll();
-        return facultyMapper.toDto(all);
+    public Page<FacultyResponseDTO> getAllFaculties(Pageable pageable) {
+        return facultyRepository.findAll(pageable).map(facultyMapper::toDto);
     }
 
     @Override

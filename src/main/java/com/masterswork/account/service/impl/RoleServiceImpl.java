@@ -8,10 +8,11 @@ import com.masterswork.account.repository.RoleRepository;
 import com.masterswork.account.service.RoleService;
 import com.masterswork.account.service.mapper.RoleMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -43,19 +44,18 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public List<RoleResponseDTO> getAllRoles() {
-        List<Role> all = roleRepository.findAll();
-        return roleMapper.toDto(all);
+    public Page<RoleResponseDTO> getAllRoles(Pageable pageable) {
+        return roleRepository.findAll(pageable).map(roleMapper::toDto);
     }
 
     @Override
-    public List<RoleResponseDTO> getAllRolesByAccountId(Long accountId) {
-        return roleMapper.toDto(roleRepository.findAllByAccounts_Id(accountId));
+    public Page<RoleResponseDTO> getAllRolesByAccountId(Long accountId, Pageable pageable) {
+        return roleRepository.findAllByAccounts_Id(accountId, pageable).map(roleMapper::toDto);
     }
 
     @Override
-    public List<RoleResponseDTO> getAllRolesByUsername(String username) {
-        return roleMapper.toDto(roleRepository.findAllByAccounts_Username(username));
+    public Page<RoleResponseDTO> getAllRolesByUsername(String username, Pageable pageable) {
+        return roleRepository.findAllByAccounts_Username(username, pageable).map(roleMapper::toDto);
     }
 
     @Override

@@ -3,8 +3,10 @@ package com.masterswork.account.service;
 import com.masterswork.account.api.dto.appuser.AppUserCreateDTO;
 import com.masterswork.account.api.dto.appuser.AppUserResponseDTO;
 import com.masterswork.account.api.dto.appuser.AppUserUpdateDTO;
+import com.masterswork.account.model.enumeration.PersonType;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
-import java.util.List;
 import java.util.Set;
 
 public interface AppUserService {
@@ -25,7 +27,9 @@ public interface AppUserService {
 
     AppUserResponseDTO getUserByAccountUsername(String username);
 
-    List<AppUserResponseDTO> getAllAppUsers();
+    Page<AppUserResponseDTO> getAllAppUsers(Pageable pageable);
+
+    Page<AppUserResponseDTO> getAllAppUsersByType(PersonType personType, Pageable pageable);
 
     Set<String> getAllUserTypes();
 

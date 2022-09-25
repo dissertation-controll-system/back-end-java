@@ -2,16 +2,20 @@ package com.masterswork.account.api.converter;
 
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.type.TypeFactory;
-import com.fasterxml.jackson.databind.util.Converter;
 import com.masterswork.account.model.enumeration.PersonType;
 import org.springframework.core.convert.ConversionFailedException;
 import org.springframework.core.convert.TypeDescriptor;
+import org.springframework.lang.Nullable;
+import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
-public class StringToPersonTypeEnumConverter implements Converter<String, PersonType> {
+@Component
+public class StringToPersonTypeEnumConverter implements
+        com.fasterxml.jackson.databind.util.Converter<String, PersonType>,
+        org.springframework.core.convert.converter.Converter<String, PersonType> {
 
     @Override
-    public PersonType convert(String source) {
+    public PersonType convert(@Nullable String source) {
         try {
             return StringUtils.hasText(source) ?
                     PersonType.valueOf(source.trim().toUpperCase()) : null;

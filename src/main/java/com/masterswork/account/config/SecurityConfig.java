@@ -1,14 +1,17 @@
 package com.masterswork.account.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.masterswork.account.config.principal.UserPrincipalAdapter;
+import com.masterswork.account.config.principal.UserDetailsAdapter;
 import com.masterswork.account.jwt.JwtUtil;
 import com.masterswork.account.jwt.filter.JwtAuthorizationFilter;
 import com.masterswork.account.repository.AccountRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
+import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -31,6 +34,7 @@ import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON_VALUE;
 
 @Configuration
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig {
 
     private final static String[] swaggerEndpoints = {
@@ -72,6 +76,14 @@ public class SecurityConfig {
     }
 
     @Bean
+    public RoleHierarchy roleHierarchy() {
+        RoleHierarchyImpl roleHierarchy = new RoleHierarchyImpl();
+        String hierarchy = "ROLE_ADMIN > ROLE_USER";
+        roleHierarchy.setHierarchy(hierarchy);
+        return roleHierarchy;
+    }
+
+    @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
     }
@@ -79,7 +91,7 @@ public class SecurityConfig {
     @Bean
     public UserDetailsService userDetailsService(AccountRepository userRepository) {
         return username -> userRepository.findFirstByUsername(username)
-                .map(UserPrincipalAdapter::new)
+                .map(UserDetailsAdapter::new)
                 .orElseThrow(() -> new UsernameNotFoundException(username));
     }
 

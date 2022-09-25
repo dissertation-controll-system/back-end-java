@@ -13,13 +13,16 @@ import com.masterswork.account.repository.CathedraRepository;
 import com.masterswork.account.service.AppUserService;
 import com.masterswork.account.service.mapper.AppUserMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
-import java.util.List;
+import javax.transaction.Transactional;
 import java.util.Set;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class AppUserServiceImpl implements AppUserService {
 
@@ -32,10 +35,11 @@ public class AppUserServiceImpl implements AppUserService {
     public AppUserResponseDTO createAppUserForAccount(Long accountId, AppUserCreateDTO appUserCreateDTO) {
         Account account = accountRepository.findById(accountId)
                 .orElseThrow(() -> new EntityNotFoundException("No account with id: " + accountId));
-        AppUser appUser = appUserMapper.createFrom(appUserCreateDTO);
-
-        account.setUser(appUser);
-        return appUserMapper.toDto(appUser);
+        AppUser newEntity = appUserMapper.createFrom(appUserCreateDTO);
+        newEntity.setAccount(account);
+        account.setUser(newEntity);
+        accountRepository.save(account);
+        return appUserMapper.toDto(appUserRepository.save(newEntity));
     }
 
     @Override
@@ -103,8 +107,13 @@ public class AppUserServiceImpl implements AppUserService {
     }
 
     @Override
-    public List<AppUserResponseDTO> getAllAppUsers() {
-        return appUserMapper.toDto(appUserRepository.findAll());
+    public Page<AppUserResponseDTO> getAllAppUsers(Pageable pageable) {
+        return appUserRepository.findAll(pageable).map(appUserMapper::toDto);
+    }
+
+    @Override
+    public Page<AppUserResponseDTO> getAllAppUsersByType(PersonType personType, Pageable pageable) {
+        return appUserRepository.findAllByType(personType, pageable).map(appUserMapper::toDto);
     }
 
     @Override

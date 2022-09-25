@@ -10,10 +10,11 @@ import com.masterswork.account.repository.FacultyRepository;
 import com.masterswork.account.service.CathedraService;
 import com.masterswork.account.service.mapper.CathedraMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -35,18 +36,18 @@ public class CathedraServiceImpl implements CathedraService {
     }
 
     @Override
-    public List<CathedraResponseDTO> getAllCathedras() {
-        return cathedraMapper.toDto(cathedraRepository.findAll());
+    public Page<CathedraResponseDTO> getAllCathedras(Pageable pageable) {
+        return cathedraRepository.findAll(pageable).map(cathedraMapper::toDto);
     }
 
     @Override
-    public List<CathedraResponseDTO> getAllCathedrasByAppUserId(Long appUserId) {
-        return cathedraMapper.toDto(cathedraRepository.findAllByUsers_Id(appUserId));
+    public Page<CathedraResponseDTO> getAllCathedrasByAppUserId(Long appUserId, Pageable pageable) {
+        return cathedraRepository.findAllByUsers_Id(appUserId, pageable).map(cathedraMapper::toDto);
     }
 
     @Override
-    public List<CathedraResponseDTO> findAllCathedrasByFacultyId(Long facultyId) {
-        return cathedraMapper.toDto(cathedraRepository.findAllByFacultyId(facultyId));
+    public Page<CathedraResponseDTO> findAllCathedrasByFacultyId(Long facultyId, Pageable pageable) {
+        return cathedraRepository.findAllByFacultyId(facultyId, pageable).map(cathedraMapper::toDto);
     }
 
     @Override

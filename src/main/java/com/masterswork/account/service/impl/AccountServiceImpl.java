@@ -11,10 +11,11 @@ import com.masterswork.account.repository.RoleRepository;
 import com.masterswork.account.service.AccountService;
 import com.masterswork.account.service.mapper.AccountMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -86,8 +87,8 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public List<AccountResponseDTO> getAllAccounts() {
-        return accountMapper.toDto(accountRepository.findAll());
+    public Page<AccountResponseDTO> getAllAccounts(Pageable pageable) {
+        return accountRepository.findAll(pageable).map(accountMapper::toDto);
     }
 
     @Override
