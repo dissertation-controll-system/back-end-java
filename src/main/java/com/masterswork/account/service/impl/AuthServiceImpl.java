@@ -21,6 +21,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService {
 
@@ -29,7 +30,6 @@ public class AuthServiceImpl implements AuthService {
     private final AuthenticationManager authenticationManager;
     private final JwtUtil jwtUtil;
 
-    @Transactional
     @Override
     public AuthorizationResponseDTO authenticateAndGenerateTokens(String username, String password) {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
@@ -39,7 +39,6 @@ public class AuthServiceImpl implements AuthService {
                 .orElseThrow(() -> new EntityNotFoundException("No user with username " + username));
     }
 
-    @Transactional
     @Override
     public AuthorizationResponseDTO refreshAccessToken(String refreshToken) {
         String username = jwtUtil.validateAndParseToken(refreshToken).getSubject();
@@ -49,7 +48,6 @@ public class AuthServiceImpl implements AuthService {
                 .orElseThrow(() -> new EntityNotFoundException("No user with username " + username));
     }
 
-    @Transactional
     @Override
     public AuthorizationResponseDTO createUser(SignUpRequestDTO signUpRequestDTO) {
         checkIfUsernameOrEmailTaken(signUpRequestDTO.getUsername(), signUpRequestDTO.getEmail());

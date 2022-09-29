@@ -16,8 +16,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
+import javax.transaction.Transactional;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class AccountServiceImpl implements AccountService {
 
