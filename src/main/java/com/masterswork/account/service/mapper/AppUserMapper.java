@@ -28,6 +28,7 @@ public interface AppUserMapper {
     void patchFrom(@MappingTarget AppUser target, AppUserUpdateDTO source);
 
     @Mapping(target = "accountRef", expression = "java(mapAccountReference(appUser))")
+    @Mapping(target = "email", source = "account.email")
     AppUserResponseDTO toDto(AppUser appUser);
 
     List<AppUserResponseDTO> toDto(Collection<AppUser> appUsers);

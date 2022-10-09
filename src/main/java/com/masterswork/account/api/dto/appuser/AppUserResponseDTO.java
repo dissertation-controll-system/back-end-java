@@ -14,6 +14,8 @@ public class AppUserResponseDTO {
 
     private String fathersName;
 
+    private String email;
+
     private PersonType type;
 
     private String accountRef;
