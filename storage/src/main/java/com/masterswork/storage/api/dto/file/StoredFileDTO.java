@@ -15,9 +15,13 @@ import java.time.Instant;
 @AllArgsConstructor
 public class StoredFileDTO {
 
-    private String path;
+    private Long id;
+    private String originalFilename;
     private Long version;
     private Long sizeBytes;
+    private String owner;
     private Instant createdAt;
+    private String createdBy;
     private Instant modifiedAt;
+    private String modifiedBy;
 }

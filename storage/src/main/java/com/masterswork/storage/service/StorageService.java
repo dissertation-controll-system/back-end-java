@@ -6,20 +6,18 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.nio.file.Path;
-
 public interface StorageService {
-
-	void init();
 
 	StoredFileDTO store(MultipartFile file);
 
-	Page<StoredFileDTO> loadAll(Pageable pageable);
+	StoredFileDTO updateFile(MultipartFile file, Long id);
 
-	Page<StoredFileDTO> loadAllByUsername(String username, Pageable pageable);
+	void deleteFile(Long id);
 
-	Path load(String filename);
+	Page<StoredFileDTO> getAllStoredFiles(Pageable pageable);
 
-	Resource loadAsResource(String filename);
+	Page<StoredFileDTO> getCurrentUserStoredFiles(Pageable pageable);
+
+	Resource loadAsResource(Long id);
 
 }

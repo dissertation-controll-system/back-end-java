@@ -1,7 +1,7 @@
 package com.masterswork.storage.model;
 
 import com.masterswork.storage.model.base.AuditedEntity;
-import com.masterswork.storage.model.enumeration.FileAccessLevel;
+import com.masterswork.storage.model.enumeration.FilePermissionType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -25,8 +25,8 @@ import javax.persistence.Table;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "file_access")
-public class FileAccess extends AuditedEntity {
+@Table(name = "file_access_permission")
+public class FileAccessPermission extends AuditedEntity {
 
     @Id
     @Column(name = "file_access_id", nullable = false, updatable = false)
@@ -34,13 +34,20 @@ public class FileAccess extends AuditedEntity {
     private Long id;
 
     @Column(name = "user_name", nullable = false)
-    private String userName;
+    private String username;
 
-    @Column(name = "access_level", nullable = false)
+    @Column(name = "permission_type", nullable = false)
     @Enumerated(EnumType.STRING)
-    private FileAccessLevel accessLevel;
+    private FilePermissionType permissionType;
 
     @ManyToOne
     @JoinColumn(name = "stored_file_id", nullable = false)
     private StoredFile file;
+
+    public static FileAccessPermission of(FilePermissionType filePermissionType, String username) {
+        return FileAccessPermission.builder()
+                .permissionType(filePermissionType)
+                .username(username)
+                .build();
+    }
 }

@@ -13,10 +13,11 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -35,29 +36,29 @@ public class FileController {
     private final StorageService storageService;
 
     @GetMapping
-    public ResponseEntity<Page<StoredFileDTO>> listUploadedFiles(
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Page<StoredFileDTO>> listAllUploadedFiles(
             @ParameterObject @PageableDefault(sort = "id") Pageable pageable) {
-        return ResponseEntity.ok(storageService.loadAll(pageable));
+        return ResponseEntity.ok(storageService.getAllStoredFiles(pageable));
     }
 
     @GetMapping("/current")
-    public ResponseEntity<Page<StoredFileDTO>> listCurrentUsers(
-            Authentication authentication,
+    public ResponseEntity<Page<StoredFileDTO>> listAllFilesForUser(
             @ParameterObject @PageableDefault(sort = "id") Pageable pageable) {
-        return ResponseEntity.ok(storageService.loadAllByUsername(authentication.getName(), pageable));
+        return ResponseEntity.ok(storageService.getCurrentUserStoredFiles(pageable));
     }
 
-    @GetMapping("/{filename}")
-    public ResponseEntity<Resource> serveFile(@PathVariable String filename) {
-        Resource file = storageService.loadAsResource(filename);
+    @GetMapping("/{id}")
+    public ResponseEntity<Resource> serveFile(@PathVariable Long id) {
+        Resource file = storageService.loadAsResource(id);
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getFilename() + "\"")
                 .body(file);
     }
 
-    @GetMapping("/preview/{filename}")
-    public ResponseEntity<Resource> previewFile(@PathVariable String filename) {
-        Resource file = storageService.loadAsResource(filename);
+    @GetMapping("/preview/{id}")
+    public ResponseEntity<Resource> previewFile(@PathVariable Long id) {
+        Resource file = storageService.loadAsResource(id);
         String mimeType = URLConnection.guessContentTypeFromName(file.getFilename());
         return ResponseEntity.ok()
                 .cacheControl(CacheControl.noStore().mustRevalidate())
@@ -66,12 +67,29 @@ public class FileController {
                 .body(file);
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteFileById(@PathVariable Long id) {
+        storageService.deleteFile(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<StoredFileDTO> updateFileById(@RequestParam("file") MultipartFile file, @PathVariable Long id) {
+        var storedFileDTO = storageService.updateFile(file, id);
+        var location = ServletUriComponentsBuilder.fromCurrentRequest()
+                .path("/{id}")
+                .buildAndExpand(storedFileDTO.getId())
+                .toUri();
+        return ResponseEntity.created(location).body(storedFileDTO);
+    }
+
+
     @PostMapping(consumes = "multipart/form-data")
     public ResponseEntity<StoredFileDTO> handleFileUpload(@RequestParam("file") MultipartFile file) {
         var storedFileDTO = storageService.store(file);
         var location = ServletUriComponentsBuilder.fromCurrentRequest()
-                .path("/{filename}")
-                .buildAndExpand(storedFileDTO.getPath())
+                .path("/{id}")
+                .buildAndExpand(storedFileDTO.getId())
                 .toUri();
         return ResponseEntity.created(location).body(storedFileDTO);
     }

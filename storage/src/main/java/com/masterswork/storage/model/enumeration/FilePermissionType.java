@@ -1,6 +1,7 @@
 package com.masterswork.storage.model.enumeration;
 
-public enum FileAccessLevel {
+public enum FilePermissionType {
     READ,
-    WRITE
+    WRITE,
+    DELETE
 }
