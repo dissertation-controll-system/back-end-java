@@ -28,7 +28,6 @@ import java.net.URLConnection;
 
 
 @RestController
-@PreAuthorize("hasRole('USER')")
 @RequestMapping("/files")
 @RequiredArgsConstructor
 public class FileController {
@@ -43,12 +42,14 @@ public class FileController {
     }
 
     @GetMapping("/current")
+    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<Page<StoredFileDTO>> listAllFilesForUser(
             @ParameterObject @PageableDefault(sort = "id") Pageable pageable) {
         return ResponseEntity.ok(storageService.getCurrentUserStoredFiles(pageable));
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<Resource> serveFile(@PathVariable Long id) {
         Resource file = storageService.loadAsResource(id);
         return ResponseEntity.ok()
@@ -57,6 +58,7 @@ public class FileController {
     }
 
     @GetMapping("/preview/{id}")
+    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<Resource> previewFile(@PathVariable Long id) {
         Resource file = storageService.loadAsResource(id);
         String mimeType = URLConnection.guessContentTypeFromName(file.getFilename());
@@ -68,12 +70,14 @@ public class FileController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<?> deleteFileById(@PathVariable Long id) {
         storageService.deleteFile(id);
         return ResponseEntity.noContent().build();
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<StoredFileDTO> updateFileById(@RequestParam("file") MultipartFile file, @PathVariable Long id) {
         var storedFileDTO = storageService.updateFile(file, id);
         var location = ServletUriComponentsBuilder.fromCurrentRequest()
@@ -85,6 +89,7 @@ public class FileController {
 
 
     @PostMapping(consumes = "multipart/form-data")
+    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<StoredFileDTO> handleFileUpload(@RequestParam("file") MultipartFile file) {
         var storedFileDTO = storageService.store(file);
         var location = ServletUriComponentsBuilder.fromCurrentRequest()
