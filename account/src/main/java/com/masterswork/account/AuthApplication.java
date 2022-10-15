@@ -4,13 +4,6 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 
-// Must have:
-// TODO: setup test data migration with liquibase contexts
-// TODO: regenerate database migration check for typos
-// TODO: implement RESTfull/like api for existing entities
-// TODO: add pagination and filtering
-// TODO: use swagger annotations for proper docs
-
 // Testing:
 // TODO: add unit tests
 // TODO: persistence tests
