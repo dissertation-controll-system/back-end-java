@@ -45,7 +45,7 @@ public class MailController {
 
     @GetMapping
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Page<EmailResponseDTO>> getAllEmials(
+    public ResponseEntity<Page<EmailResponseDTO>> getAllEmails(
             @RequestParam(name = "username", required = false) String username, @ParameterObject @PageableDefault(sort = "id") Pageable pageable) {
         Page<EmailResponseDTO> allEmails =  username == null ?
                 emailService.getAllEmails(pageable) : emailService.getAllEmailsByUser(username, pageable);
@@ -54,7 +54,7 @@ public class MailController {
 
     @GetMapping("/current")
     @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<Page<EmailResponseDTO>> getAllEmialsCurrentUser(
+    public ResponseEntity<Page<EmailResponseDTO>> getAllEmailsCurrentUser(
             Authentication authentication, @ParameterObject @PageableDefault(sort = "id") Pageable pageable) {
         return ResponseEntity.ok(emailService.getAllEmailsByUser(authentication.getName(), pageable));
     }
