@@ -6,6 +6,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Set;
+
 public interface StorageService {
 
 	StoredFileDTO store(MultipartFile file);
@@ -17,6 +19,8 @@ public interface StorageService {
 	Page<StoredFileDTO> getAllStoredFiles(Pageable pageable);
 
 	Page<StoredFileDTO> getCurrentUserStoredFiles(Pageable pageable);
+
+	Resource[] loadResourcesByIds(Set<Long> ids);
 
 	Resource loadAsResource(Long id);
 

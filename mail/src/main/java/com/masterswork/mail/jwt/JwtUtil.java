@@ -40,7 +40,7 @@ public class JwtUtil {
                 .collect(Collectors.toSet());
 
         UserPrincipal userPrincipal = new UserPrincipal(accountId, userId, username);
-        return new UsernamePasswordAuthenticationToken(userPrincipal, null, authorities);
+        return new UsernamePasswordAuthenticationToken(userPrincipal, rawToken, authorities);
     }
 
     public DecodedJWT validateAndParseToken(String token) {

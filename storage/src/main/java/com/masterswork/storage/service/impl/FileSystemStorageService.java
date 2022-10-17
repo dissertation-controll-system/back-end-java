@@ -31,6 +31,7 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -117,6 +118,13 @@ public class FileSystemStorageService implements StorageService {
 		String username = SecurityUtils.getCurrentUserUsername();
 		return storedFileRepository.findAllByUserAndPermissionType(username, FilePermissionType.READ, pageable)
 				.map(storedFileMapper::toDto);
+	}
+
+	@Override
+	public Resource[] loadResourcesByIds(Set<Long> ids) {
+		return storedFileRepository.findAllByIdIn(ids).stream()
+				.map(file -> loadAsResource(file.getId()))
+				.toArray(Resource[]::new);
 	}
 
 	@Override
