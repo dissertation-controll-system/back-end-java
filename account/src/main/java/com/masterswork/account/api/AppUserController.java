@@ -39,7 +39,7 @@ public class AppUserController {
     private final CathedraService cathedraService;
 
     @Operation(summary = "Create new appUser")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('USER')")
     @PostMapping(consumes = "application/json", produces = "application/json")
     public ResponseEntity<AppUserResponseDTO> createAppUser(@Valid @RequestBody AppUserCreateDTO appUserCreateDTO) {
         return ResponseEntity.ok(appUserService.createAppUser(appUserCreateDTO));
