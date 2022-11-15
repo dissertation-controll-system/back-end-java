@@ -6,7 +6,7 @@ create table template
     modified_at         timestamp       default now(),
     modified_by         varchar(255)    default 'system',
     name                varchar(1024)   not null unique,
-    subject             varchar(1024)   not null unique,
+    subject             varchar(1024)   not null,
     body                text            not null
 );
 
