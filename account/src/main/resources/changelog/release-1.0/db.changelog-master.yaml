@@ -13,6 +13,17 @@ databaseChangeLog:
   - changeSet:
       id: 2
       author: amish
+      changes:
+        - sqlFile:
+            comment: basic data
+            splitStatements: true
+            endDelimiter: \nGO
+            stripComments: true
+            path: migrations/schema-2.sql
+            relativeToChangelogFile: true
+  - changeSet:
+      id: 3
+      author: amish
       context: demo
       changes:
         - sqlFile:

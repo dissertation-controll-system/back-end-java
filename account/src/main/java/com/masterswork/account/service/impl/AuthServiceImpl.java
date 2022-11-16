@@ -6,9 +6,9 @@ import com.masterswork.account.api.auth.dto.TokensResponseDTO;
 import com.masterswork.account.api.dto.account.AccountResponseDTO;
 import com.masterswork.account.jwt.JwtUtil;
 import com.masterswork.account.model.Account;
-import com.masterswork.account.model.Role;
 import com.masterswork.account.model.enumeration.RoleName;
 import com.masterswork.account.repository.AccountRepository;
+import com.masterswork.account.repository.RoleRepository;
 import com.masterswork.account.service.AuthService;
 import com.masterswork.account.service.exception.UserExistsException;
 import com.masterswork.account.service.mapper.AccountMapper;
@@ -28,6 +28,7 @@ import java.util.Set;
 public class AuthServiceImpl implements AuthService {
 
     private final AccountRepository accountRepository;
+    private final RoleRepository roleRepository;
     private final AccountMapper accountMapper;
     private final AuthenticationManager authenticationManager;
     private final JwtUtil jwtUtil;
@@ -55,7 +56,7 @@ public class AuthServiceImpl implements AuthService {
         checkIfUsernameOrEmailTaken(signUpRequestDTO.getUsername(), signUpRequestDTO.getEmail());
 
         Account newAccount = accountMapper.createFrom(signUpRequestDTO);
-        newAccount.addRole(Role.ofName(RoleName.USER));
+        newAccount.addRole(roleRepository.findByName(RoleName.USER.getName()));
 
         final Account saved = accountRepository.save(newAccount);
         return generateAuthorizationResponse(saved);
