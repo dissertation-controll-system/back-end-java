@@ -1,5 +1,6 @@
 package com.masterswork.account.service.mapper;
 
+import com.masterswork.account.api.auth.dto.SignUpRequestDTO;
 import com.masterswork.account.api.dto.appuser.AppUserCreateDTO;
 import com.masterswork.account.api.dto.appuser.AppUserResponseDTO;
 import com.masterswork.account.api.dto.appuser.AppUserUpdateDTO;
@@ -19,6 +20,9 @@ public interface AppUserMapper {
 
     @Mapping(target = "id", ignore = true)
     AppUser createFrom(AppUserCreateDTO source);
+
+    @Mapping(target = "id", ignore = true)
+    AppUser createFrom(SignUpRequestDTO signUpRequestDTO);
 
     @Mapping(target = "id", ignore = true)
     void updateFrom(@MappingTarget AppUser target, AppUserUpdateDTO source);
