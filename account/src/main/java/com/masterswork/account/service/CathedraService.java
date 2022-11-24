@@ -6,9 +6,13 @@ import com.masterswork.account.api.dto.cathedra.CathedraUpdateDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.util.List;
+
 public interface CathedraService {
 
     CathedraResponseDTO createCathedraByFacultyId(Long facultyId, CathedraCreateDTO cathedraCreateDTO);
+
+    List<CathedraResponseDTO>  createCathedrasByFacultyId(Long facultyId, List<CathedraCreateDTO> cathedraCreateDTO);
 
     Page<CathedraResponseDTO> getAllCathedras(Pageable pageable);
 

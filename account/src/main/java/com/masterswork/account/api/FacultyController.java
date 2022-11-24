@@ -16,6 +16,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -28,7 +29,9 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
+import java.util.List;
 
+@Validated
 @RestController
 @RequestMapping("/faculties")
 @RequiredArgsConstructor
@@ -106,6 +109,15 @@ public class FacultyController {
                 .buildAndExpand(newEntity.getId())
                 .toUri();
         return ResponseEntity.created(location).body(newEntity);
+    }
+
+    @Operation(summary = "Create list and assign to faculty by facultyId")
+    @PreAuthorize("hasRole('ADMIN')")
+    @PostMapping(path = "/{facultyId}/cathedras/add-all", consumes = "application/json", produces = "application/json")
+    public ResponseEntity<List<CathedraResponseDTO>> addListOfCathedras(
+            @PathVariable Long facultyId, @Valid @RequestBody List<@Valid CathedraCreateDTO> body) {
+        var createdCathedras = cathedraService.createCathedrasByFacultyId(facultyId, body);
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdCathedras);
     }
 
     @Operation(summary = "Get all cathedras assigned to faculty by facultyId")
