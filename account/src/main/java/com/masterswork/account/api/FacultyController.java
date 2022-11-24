@@ -111,7 +111,7 @@ public class FacultyController {
         return ResponseEntity.created(location).body(newEntity);
     }
 
-    @Operation(summary = "Create list and assign to faculty by facultyId")
+    @Operation(summary = "Create list of cathedras and assign to faculty by facultyId")
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping(path = "/{facultyId}/cathedras/add-all", consumes = "application/json", produces = "application/json")
     public ResponseEntity<List<CathedraResponseDTO>> addListOfCathedras(
