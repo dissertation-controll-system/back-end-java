@@ -15,6 +15,7 @@
 		<module>account</module>
 		<module>storage</module>
 		<module>mail</module>
+		<module>organization</module>
 	</modules>
 
 </project>
