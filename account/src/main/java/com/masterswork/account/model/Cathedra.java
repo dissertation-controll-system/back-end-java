@@ -4,6 +4,7 @@ import com.masterswork.account.model.base.AuditedEntity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.Accessors;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -22,6 +23,7 @@ import java.util.Set;
 @Getter
 @Setter
 @NoArgsConstructor
+@Accessors(chain = true)
 @Table(name = "cathedra")
 public class Cathedra extends AuditedEntity {
 

@@ -60,14 +60,14 @@ public class AppUserController {
     }
 
     @Operation(summary = "Update appUser by userId")
-    @PreAuthorize("hasRole('ADMIN') or (hasRole('USER') and #userId == authentication.principal.userId)")
+    @PreAuthorize("hasRole('ADMIN') or (hasRole('USER') and #userId == authentication.principal.appUserId)")
     @PutMapping(path = "/{userId}", consumes = "application/json", produces = "application/json")
     public ResponseEntity<AppUserResponseDTO> updateUser(@PathVariable Long userId, @Valid @RequestBody AppUserUpdateDTO body) {
         return ResponseEntity.ok(appUserService.updateUser(userId, body));
     }
 
     @Operation(summary = "Patch appUser by userId")
-    @PreAuthorize("hasRole('ADMIN') or (hasRole('USER') and #userId == authentication.principal.userId)")
+    @PreAuthorize("hasRole('ADMIN') or (hasRole('USER') and #userId == authentication.principal.appUserId)")
     @PatchMapping(path = "/{userId}", consumes = "application/json", produces = "application/json")
     public ResponseEntity<AppUserResponseDTO> patchUser(@PathVariable Long userId, @RequestBody AppUserUpdateDTO body) {
         return ResponseEntity.ok(appUserService.patchUser(userId, body));

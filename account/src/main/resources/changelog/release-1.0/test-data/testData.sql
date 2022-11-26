@@ -3,9 +3,6 @@ insert into users (fathers_name, first_name, last_name, type) values
 insert into users (fathers_name, first_name, last_name, type) values
     ('userich', 'user', 'userenko', 'TEACHER');
 
-insert into role (name) values
-    ('ADMIN'), ( 'USER');
-
 insert into account (active, email, password, username, user_id)
     select true, 'admin@example.com', '$2a$10$xByp2q7ImdSvb1w/sOuUK.2g.uSBwjZSg2RLy94SzE2iM.ezBROOW', 'admin', users.user_id
     from users where first_name = 'admin';

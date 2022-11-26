@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
+import java.util.List;
 
 @Service
 @Transactional
@@ -35,6 +36,17 @@ public class CathedraServiceImpl implements CathedraService {
         newCathedra.setFaculty(faculty);
 
         return cathedraMapper.toDto(cathedraRepository.save(newCathedra));
+    }
+
+    @Override
+    public List<CathedraResponseDTO> createCathedrasByFacultyId(Long facultyId, List<CathedraCreateDTO> cathedraCreateDTOList) {
+        Faculty faculty = facultyRepository.findById(facultyId)
+                .orElseThrow(() -> new EntityNotFoundException("No faculty with id: " + facultyId));
+
+        List<Cathedra> newCathedras = cathedraMapper.createFrom(cathedraCreateDTOList);
+        newCathedras.forEach(cathedra -> cathedra.setFaculty(faculty));
+
+        return cathedraMapper.toDto(cathedraRepository.saveAll(newCathedras));
     }
 
     @Override

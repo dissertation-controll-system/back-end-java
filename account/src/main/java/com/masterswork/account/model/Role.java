@@ -1,7 +1,6 @@
 package com.masterswork.account.model;
 
 import com.masterswork.account.model.base.AuditedEntity;
-import com.masterswork.account.model.enumeration.RoleName;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -38,11 +37,5 @@ public class Role extends AuditedEntity {
 
     @ManyToMany(mappedBy = "roles")
     private Set<Account> accounts = new HashSet<>();
-
-    public static Role ofName(RoleName roleName) {
-        return Role.builder()
-                .name(roleName.getName())
-                .build();
-    }
 
 }

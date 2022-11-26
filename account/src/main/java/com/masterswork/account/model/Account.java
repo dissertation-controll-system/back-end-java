@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -74,7 +75,7 @@ public class Account extends AuditedEntity {
     @ColumnDefault("true")
     private Boolean active = true;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinColumn(name = "user_id", referencedColumnName = "user_id", unique = true)
     private AppUser user;
 
@@ -93,6 +94,12 @@ public class Account extends AuditedEntity {
     public Account removeRole(Role role) {
         roles.remove(role);
         role.getAccounts().remove(this);
+        return this;
+    }
+
+    public Account setUser(AppUser appUser) {
+        this.user = appUser;
+        appUser.setAccount(this);
         return this;
     }
 }

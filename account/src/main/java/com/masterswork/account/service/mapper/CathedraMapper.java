@@ -24,6 +24,8 @@ public interface CathedraMapper {
     @Mapping(target = "id", ignore = true)
     Cathedra createFrom(CathedraCreateDTO cathedraResponseDTO);
 
+    List<Cathedra> createFrom(Collection<CathedraCreateDTO> cathedraResponseDTO);
+
     @Mapping(target = "id", ignore = true)
     void updateFrom(@MappingTarget Cathedra target, CathedraUpdateDTO source);
 
