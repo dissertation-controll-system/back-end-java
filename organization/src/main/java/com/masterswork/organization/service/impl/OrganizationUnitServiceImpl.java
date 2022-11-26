@@ -61,7 +61,6 @@ public class OrganizationUnitServiceImpl implements OrganizationUnitService {
     @Override
     public void deleteOrganization(Long id) {
         var organizationUnit = organizationUnitRepository.findById(id)
-
                 .orElseThrow(() -> new EntityNotFoundException("No Organization with id: " + id));
         organizationUnit.getSubs().forEach(OrganizationUnit::removeOwner);
         organizationUnitRepository.deleteById(id);
