@@ -1,5 +1,6 @@
 package com.masterswork.account.api.dto.cathedra;
 
+import com.masterswork.account.api.dto.faculty.FacultyResponseDTO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -17,6 +18,6 @@ public class CathedraResponseDTO {
 
     private String name;
 
-    private String facultyRef;
+    private FacultyResponseDTO faculty;
 
 }

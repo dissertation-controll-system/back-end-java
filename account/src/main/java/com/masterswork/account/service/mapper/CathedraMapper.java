@@ -16,7 +16,6 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public interface CathedraMapper {
 
-    @Mapping(target = "facultyRef", expression = "java(mapFacultyReference(cathedra))")
     CathedraResponseDTO toDto(Cathedra cathedra);
 
     List<CathedraResponseDTO> toDto(Collection<Cathedra> all);
@@ -33,7 +32,4 @@ public interface CathedraMapper {
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     void patchFrom(@MappingTarget Cathedra target, CathedraUpdateDTO source);
 
-    default String mapFacultyReference(Cathedra cathedra) {
-        return "/faculty/" + cathedra.getFaculty().getId();
-    }
 }
