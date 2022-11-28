@@ -40,7 +40,7 @@ public interface AccountMapper {
     }
     default String mapAppUserReference(Account account) {
         return Optional.ofNullable(account.getUser())
-                .map(user -> "/user/" + user.getId())
+                .map(user -> "/app-user/" + user.getId())
                 .orElse(null);
     }
 
