@@ -76,7 +76,7 @@ public class FileController {
         return ResponseEntity.noContent().build();
     }
 
-    @PutMapping("/{id}")
+    @PutMapping(value = "/{id}", consumes = "multipart/form-data")
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity<StoredFileDTO> updateFileById(@RequestParam("file") MultipartFile file, @PathVariable Long id) {
         var storedFileDTO = storageService.updateFile(file, id);
