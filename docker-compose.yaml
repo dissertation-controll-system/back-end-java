@@ -43,3 +43,19 @@ services:
       POSTGRES_DB: organization-service
     ports:
       - '5435:5432'
+  process-db:
+    image: postgres:14.1-alpine
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: process-service
+    ports:
+      - '5436:5432'
+  mongodb:
+    image: mongo:latest
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: root
+    ports:
+      - "27017:27017"
