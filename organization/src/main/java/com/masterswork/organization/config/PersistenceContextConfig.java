@@ -1,4 +1,4 @@
-package com.masterswork.process.config;
+package com.masterswork.organization.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
