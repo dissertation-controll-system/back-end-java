@@ -9,10 +9,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+import java.time.Instant;
 import java.util.Collection;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
@@ -40,11 +43,26 @@ public class JwtUtil {
                 .collect(Collectors.toSet());
 
         UserPrincipal userPrincipal = new UserPrincipal(accountId, userId, username);
-        return new UsernamePasswordAuthenticationToken(userPrincipal, null, authorities);
+        return new UsernamePasswordAuthenticationToken(userPrincipal, rawToken, authorities);
     }
 
     public DecodedJWT validateAndParseToken(String token) {
         return JWT.require(algorithm).build().verify(token);
     }
 
+    public void setUserAsAdmin(String username, Long userId) {
+        UserPrincipal userPrincipal = new UserPrincipal(null, userId, username);
+        String rawToken = generateAccessToken(username, userId);
+        SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(userPrincipal, rawToken, null));
+    }
+    private String generateAccessToken(String username, Long userId) {
+        String roleAdmin = "ROLE_ADMIN";
+        return JWT.create()
+                .withSubject(username)
+                .withIssuedAt(Instant.now())
+                .withExpiresAt(Instant.now().plusMillis(jwtProperties.getAccessTokenExpiry()))
+                .withClaim("scp", List.of(roleAdmin))
+                .withClaim("user_id", userId)
+                .sign(algorithm);
+    }
 }

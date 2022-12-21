@@ -12,7 +12,7 @@ import java.util.Optional;
 
 @Configuration
 @EnableJpaAuditing(auditorAwareRef = "auditorProvider")
-@EnableJpaRepositories(basePackages = "com.masterswork.organization.repository")
+@EnableJpaRepositories(basePackages = "com.masterswork.process.repository")
 public class PersistenceContextConfig {
 
     @Bean

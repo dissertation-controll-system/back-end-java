@@ -28,6 +28,8 @@ public interface OrganizationUnitService {
 
     Set<Long> getParticipantsIdsByOrganizationId(Long id);
 
+    Set<Long> getParticipantsForOrganizations(Set<Long> ids);
+
     OrganizationResponseDTO addParticipantToOrganization(Long organizationId, Long participantId);
 
     OrganizationResponseDTO removeParticipantFromOrganization(Long organizationId, Long participantId);

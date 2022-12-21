@@ -3,8 +3,10 @@ package com.masterswork.process;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
-@ConfigurationPropertiesScan("com.masterswork.organization.config")
+@EnableScheduling
+@ConfigurationPropertiesScan("com.masterswork.process.config")
 @SpringBootApplication
 public class ProcessApplication {
 

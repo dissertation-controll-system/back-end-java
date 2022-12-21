@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import javax.persistence.EntityNotFoundException;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -90,8 +91,18 @@ public class OrganizationUnitServiceImpl implements OrganizationUnitService {
 
     @Override
     public Set<Long> getParticipantsIdsByOrganizationId(Long id) {
-        OrganizationUnitParticipantsProjection participantsById = organizationUnitRepository.getParticipantsById(id);
-        return new TreeSet<>(participantsById.getParticipants());
+        var organizationUnit = organizationUnitRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("No Organization with id: " + id));
+        TreeSet<Long> ids = new TreeSet<>(organizationUnit.getParticipants());
+        ids.add(organizationUnit.getHeadId());
+        return ids;
+    }
+
+    @Override
+    public Set<Long> getParticipantsForOrganizations(Set<Long> ids) {
+        return organizationUnitRepository.getParticipantsByIdIn(ids).stream()
+                .flatMap(unit -> unit.getAllParticipants().stream())
+                .collect(Collectors.toCollection(TreeSet::new));
     }
 
     @Override

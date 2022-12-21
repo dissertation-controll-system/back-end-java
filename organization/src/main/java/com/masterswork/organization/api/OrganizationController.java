@@ -91,6 +91,12 @@ public class OrganizationController {
     }
 
     @PreAuthorize("hasRole('USER')")
+    @GetMapping(path = "/participants", produces = "application/json")
+    public ResponseEntity<Set<Long>> getParticipantsForOrganizations(@RequestParam Set<Long> organizationId) {
+        return ResponseEntity.ok(organizationUnitService.getParticipantsForOrganizations(organizationId));
+    }
+
+    @PreAuthorize("hasRole('USER')")
     @PostMapping(path = "/{organizationId}/participants/{participantId}", produces = "application/json")
     public ResponseEntity<OrganizationResponseDTO> addParticipantToOrganization(
             @PathVariable Long organizationId, @PathVariable Long participantId) {

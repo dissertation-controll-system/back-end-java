@@ -1,12 +1,18 @@
 package com.masterswork.process.api.dto.schema;
 
-import com.masterswork.process.api.dto.schema.stage.AbstractStageDTO;
-import lombok.Data;
+import com.masterswork.process.api.dto.schema.stage.StageDTO;
+import lombok.*;
 
 import java.util.Map;
 
-@Data
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class SchemaCreateDTO {
 
-    private Map<Long, AbstractStageDTO> stages;
+    private String name;
+
+    private Map<String, StageDTO> schema;
 }

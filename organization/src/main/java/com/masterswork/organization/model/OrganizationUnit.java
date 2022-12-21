@@ -4,6 +4,7 @@ import com.masterswork.organization.model.base.AuditedEntity;
 import lombok.*;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -25,6 +26,7 @@ public class OrganizationUnit extends AuditedEntity {
     @Column(name = "name", nullable = false)
     private String name;
 
+    @NotNull
     @Column(name = "head_id", nullable = false)
     private Long headId;
 

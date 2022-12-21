@@ -1,9 +1,16 @@
 package com.masterswork.process.api;
 
+import com.masterswork.process.api.dto.process.ProcessResponseDTO;
 import com.masterswork.process.api.dto.process.ProcessStartRequest;
-import com.masterswork.process.repository.ProcessSchemaRepository;
+import com.masterswork.process.config.principal.UserPrincipal;
+import com.masterswork.process.service.ProcessService;
 import lombok.RequiredArgsConstructor;
+import org.springdoc.api.annotations.ParameterObject;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -13,31 +20,24 @@ import javax.validation.Valid;
 @RequiredArgsConstructor
 public class ProcessController {
 
-    private final ProcessSchemaRepository processSchemaRepository;
+    private final ProcessService processService;
 
-    @PostMapping("/{processId}/start")
-    public ResponseEntity<?> startProcess(@PathVariable Long processId, @Valid @RequestBody ProcessStartRequest body) {
-        return ResponseEntity.ok(null);
+    @PostMapping("/start")
+    public ResponseEntity<?> startProcess(@Valid @RequestBody ProcessStartRequest body) {
+        processService.startOrScheduleRequest(body);
+        return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/{processId}/stages/{stageId}")
-    public ResponseEntity<?> setStageResponse(@PathVariable Long processId, @PathVariable Long stageId, @Valid @RequestBody ProcessStartRequest body) {
-        return ResponseEntity.ok(null);
+    @GetMapping("/current")
+    public ResponseEntity<Page<ProcessResponseDTO>> getProcessesForCurrentUser(
+            @AuthenticationPrincipal UserPrincipal userPrincipal,
+            @ParameterObject @PageableDefault(sort = "id") Pageable pageable) {
+        return ResponseEntity.ok(processService.getProcessInstancesForUser(userPrincipal.getAppUserId(), pageable));
     }
 
-    @GetMapping("/{processId}")
-    public ResponseEntity<?> getProcess(@PathVariable Long processId) {
-        return ResponseEntity.ok(null);
-    }
-
-    @GetMapping
-    public ResponseEntity<?> getAllProcesses() {
-        return ResponseEntity.ok(null);
-    }
-
-    @GetMapping("/{processId}/stages/{stageId}")
-    public ResponseEntity<?> getProcessStage(@PathVariable Long processId, @PathVariable Long stageId) {
-        return ResponseEntity.ok(null);
+    @GetMapping("/{id}")
+    public ResponseEntity<ProcessResponseDTO> getProcessInstanceById(@PathVariable Long id) {
+        return ResponseEntity.ok(processService.getProcessInstanceById(id));
     }
 
 }
