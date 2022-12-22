@@ -65,6 +65,7 @@ springdoc:
     enabled: true
 
 client:
+  storage-uri: ${STORAGE_URI:http://localhost:8081}
   organization-uri: ${ORGANIZATION_URI:http://localhost:8083}
 
 feign:

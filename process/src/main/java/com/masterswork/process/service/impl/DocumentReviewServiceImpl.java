@@ -4,6 +4,7 @@ import com.masterswork.process.api.dto.review.CommentReviewCreateDTO;
 import com.masterswork.process.api.dto.review.DocumentReviewResponseDTO;
 import com.masterswork.process.api.dto.review.ReviewMaterialsSubmitDTO;
 import com.masterswork.process.api.dto.review.ReviewSubmitDTO;
+import com.masterswork.process.client.StorageClient;
 import com.masterswork.process.model.enumeration.DocumentReviewStatus;
 import com.masterswork.process.model.relational.DocumentReview;
 import com.masterswork.process.repository.DocumentReviewRepository;
@@ -21,6 +22,8 @@ import org.springframework.util.ObjectUtils;
 import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
 
+import java.util.Map;
+
 import static com.masterswork.process.model.enumeration.DocumentReviewStatus.*;
 
 @Service
@@ -29,6 +32,7 @@ public class DocumentReviewServiceImpl implements DocumentReviewService {
 
     private final DocumentReviewRepository documentReviewRepository;
     private final StageManager stageManager;
+    private final StorageClient storageClient;
     private final DocumentReviewMapper documentReviewMapper;
 
 
@@ -81,6 +85,11 @@ public class DocumentReviewServiceImpl implements DocumentReviewService {
             if (documentReview.getText() == null && ObjectUtils.isEmpty(documentReview.getAttachmentsIds())) {
                 throw new IllegalStateException("No information to review");
             } else {
+                storageClient.grantFilesAccessByUsersIds(
+                        documentReview.getAttachmentsIds(),
+                        documentReview.getReviewersIds(),
+                        Map.of("permissionType", "READ")
+                );
                 documentReview.setStatus(REVIEW_REQUESTED);
                 return documentReviewMapper.toDto(documentReviewRepository.save(documentReview));
             }
