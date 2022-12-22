@@ -10,7 +10,8 @@ create table process_instance
     is_finished         boolean default false,
     owner_id            bigint,
     owner_username      varchar(255),
-    subordinate_id      bigint
+    subordinate_id      bigint,
+    stage_data          jsonb
 );
 
 create table process_job

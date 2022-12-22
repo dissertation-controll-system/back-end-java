@@ -3,9 +3,13 @@ package com.masterswork.process.model.relational;
 import com.masterswork.process.model.relational.base.AuditedEntity;
 import com.vladmihalcea.hibernate.type.json.JsonBinaryType;
 import lombok.*;
+import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
 
 import javax.persistence.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 @Entity
@@ -41,17 +45,34 @@ public class ProcessInstance extends AuditedEntity {
     @Column(name = "subordinate_id")
     private Long subordinateId;
 
+    @Type(type = "jsonb")
+    @Column(columnDefinition = "jsonb", name = "stage_data")
+    private Map<Long, Map<String, Object>> stageData;
+
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "processInstance")
     private Set<DocumentReview> reviews;
 
-    public static ProcessInstance of(String schemaId, Long currentStage, Long ownerId,  String ownerUsername, Long subordinateId) {
+    public static ProcessInstance of(String schemaId, Long currentStage, Long ownerId,  String ownerUsername, Long subordinateId, Map<Long, Map<String, Object>> stageData) {
         return ProcessInstance.builder()
                 .schemaId(schemaId)
                 .currentStage(currentStage)
                 .ownerId(ownerId)
                 .ownerUsername(ownerUsername)
                 .subordinateId(subordinateId)
+                .stageData(stageData)
                 .build();
+    }
+
+    public Map<Long, Map<String, Object>> getStageData() {
+        return Optional.ofNullable(stageData).orElseGet(HashMap::new);
+    }
+
+    public Object getPropertyForStage(Long stageId, String propertyName) {
+        Map<String, Object> stage = getStageData().get(stageId);
+        if (stage != null) {
+            return stage.get(propertyName);
+        }
+        return null;
     }
 
     public ProcessInstance addReview(DocumentReview review) {

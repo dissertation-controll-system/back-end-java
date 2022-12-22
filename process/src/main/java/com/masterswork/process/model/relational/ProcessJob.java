@@ -53,7 +53,7 @@ public class ProcessJob extends AuditedEntity {
 
     @Type(type = "jsonb")
     @Column(columnDefinition = "jsonb", name = "stage_data")
-    private Map<Long, AdditionalStageData> stageData;
+    private Map<Long, Map<String, Object>> stageData;
 
     public void markAsExecuted() {
         this.isExecuted = Boolean.TRUE;

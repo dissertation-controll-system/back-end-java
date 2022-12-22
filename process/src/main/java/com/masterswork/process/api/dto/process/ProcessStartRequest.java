@@ -13,5 +13,5 @@ public class ProcessStartRequest {
     private String  schemaId;
     private Set<Long> participantsIds;
     private Set<Long> organizationUnitsIds;
-    private Map<Long, AdditionalStageData> stageData;
+    private Map<Long, Map<String, Object>> stageData;
 }

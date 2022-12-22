@@ -28,9 +28,14 @@ public class MailSendProcessorImpl implements StageProcessor {
                 .fromId(getIdByType(processInstance, (String) stageDTO.getProperties().get("from")))
                 .fromUsername(processInstance.getOwnerUsername())
                 .templateId(Long.valueOf((Integer) stageDTO.getProperties().get("templateId")))
-                .attachmentsIds(mapIntToLongList((List<Integer>) stageDTO.getProperties().get("attachmentsIds")))
                 .parameters((Map<String, Object>) stageDTO.getProperties().get("emailParameters"))
                 .build();
+
+        Object attachmentsIds = processInstance.getPropertyForStage(
+                processInstance.getCurrentStage(), "attachmentsIds");
+        if (attachmentsIds != null) {
+            sendMessage.setAttachmentsIds(mapIntToLongList((List<Integer>) attachmentsIds));
+        }
 
         jmsTemplate.convertAndSend(MAIL_DELIVER_REQUEST_TOPIC, sendMessage, m -> {
             m.setLongProperty("process-instance-id", processInstance.getId());

@@ -1,6 +1,5 @@
 package com.masterswork.process.service.impl;
 
-import com.masterswork.process.api.dto.process.AdditionalStageData;
 import com.masterswork.process.api.dto.schema.stage.StageDTO;
 import com.masterswork.process.model.enumeration.StageType;
 import com.masterswork.process.model.relational.ProcessInstance;
@@ -15,7 +14,6 @@ import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -28,9 +26,9 @@ public class StageManagerImpl implements StageManager {
     private final ProcessInstanceRepository processInstanceRepository;
 
     @Override
-    public void startProcess(String schemaId, Long ownerId, String ownerUsername, Set<Long> participantsIds, Map<Long, AdditionalStageData> stageData) {
+    public void startProcess(String schemaId, Long ownerId, String ownerUsername, Set<Long> participantsIds, Map<Long, Map<String, Object>> stageData) {
         List<ProcessInstance> processInstances = participantsIds.stream()
-                .map(participantId -> ProcessInstance.of(schemaId, 0L, ownerId, ownerUsername, participantId))
+                .map(participantId -> ProcessInstance.of(schemaId, 0L, ownerId, ownerUsername, participantId, stageData))
                 .collect(Collectors.toList());
         processInstanceRepository.saveAll(processInstances);
         processInstances.forEach(this::runStage);

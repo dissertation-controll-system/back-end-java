@@ -71,6 +71,11 @@ public class ProcessServiceImpl implements ProcessService {
     }
 
     @Override
+    public Page<ProcessResponseDTO> getAllProcesses(Pageable pageable) {
+        return processInstanceRepository.findAll(pageable).map(processMapper::toDto);
+    }
+
+    @Override
     public void startScheduledProcesses() {
         List<ProcessJob> notExecuted = processJobRepository.findAllByIsExecutedAndStartTimeIsLessThanEqual(Boolean.FALSE, Instant.now());
         notExecuted.forEach(job -> {

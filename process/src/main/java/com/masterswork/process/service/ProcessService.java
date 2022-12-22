@@ -14,4 +14,6 @@ public interface ProcessService {
     Page<ProcessResponseDTO> getProcessInstancesForUser(Long appUserId, Pageable pageable);
 
     ProcessResponseDTO getProcessInstanceById(Long instanceId);
+
+    Page<ProcessResponseDTO> getAllProcesses(Pageable pageable);
 }
