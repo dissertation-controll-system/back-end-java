@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -127,5 +128,12 @@ public class AppUserServiceImpl implements AppUserService {
                 .orElseThrow(() -> new EntityNotFoundException("No appUser with id: " + userId));
 
         appUserRepository.delete(appUser);
+    }
+
+    @Override
+    public Set<String> getUserNamesByIds(Set<Long> userId) {
+        return accountRepository.findAllByUserIdIn(userId).stream()
+                .map(Account::getUsername)
+                .collect(Collectors.toSet());
     }
 }

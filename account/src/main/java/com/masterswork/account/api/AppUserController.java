@@ -122,4 +122,10 @@ public class AppUserController {
         appUserService.deleteAppUserById(userId);
         return ResponseEntity.noContent().build();
     }
+
+    @PreAuthorize("hasRole('USER')")
+    @GetMapping(path = "/username", produces = "application/json")
+    public ResponseEntity<Set<String>> getUsernamesForAppUsers(@RequestParam Set<Long> userId) {
+        return ResponseEntity.ok(appUserService.getUserNamesByIds(userId));
+    }
 }

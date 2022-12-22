@@ -1,6 +1,7 @@
 package com.masterswork.storage.service;
 
 import lombok.experimental.UtilityClass;
+import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 
@@ -13,6 +14,11 @@ import java.util.function.Predicate;
 public class SecurityUtils {
 
     private static final String ROLE_PREFIX = "ROLE_";
+
+    public Optional<String> getJwt() {
+        return Optional.ofNullable((AbstractAuthenticationToken) SecurityContextHolder.getContext().getAuthentication())
+                .map(abstractAuthenticationToken -> (String) abstractAuthenticationToken.getCredentials());
+    }
 
     public String getCurrentUserUsername() {
         return Optional.ofNullable(SecurityContextHolder.getContext().getAuthentication())

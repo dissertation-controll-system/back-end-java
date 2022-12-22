@@ -1,5 +1,6 @@
 package com.masterswork.storage.api;
 
+import com.masterswork.storage.api.dto.access.FileAccessLevelDTO;
 import com.masterswork.storage.api.dto.access.FileAccessPermissionDTO;
 import com.masterswork.storage.service.AccessService;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +17,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Set;
 
 @RestController
 @PreAuthorize("hasRole('USER')")
@@ -35,6 +38,13 @@ public class AccessController {
     public ResponseEntity<?> revokeAccess(@PathVariable Long id, @RequestBody FileAccessPermissionDTO fileAccessPermissionDTO) {
         accessService.revokeAccess(id, fileAccessPermissionDTO);
         return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/grant")
+    public ResponseEntity<?> grantFilesAccessForAppUsers(
+            @RequestParam Set<Long> fileIds, @RequestParam Set<Long> appUserIds, @RequestBody FileAccessLevelDTO fileAccessPermissionDTO) {
+        accessService.grantFilesAccessForAppUsers(fileIds, appUserIds, fileAccessPermissionDTO);
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/{id}")

@@ -36,3 +36,11 @@ springdoc:
     enabled: true
   api-docs:
     enabled: true
+
+client:
+  account-uri: ${ACCOUNT_URI:http://localhost:8080}
+
+feign:
+  autoconfiguration:
+    jackson:
+      enabled: true

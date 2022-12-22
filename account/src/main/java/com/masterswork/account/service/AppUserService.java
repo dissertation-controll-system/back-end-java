@@ -34,4 +34,6 @@ public interface AppUserService {
     Set<String> getAllUserTypes();
 
     void deleteAppUserById(Long userId);
+
+    Set<String> getUserNamesByIds(Set<Long> userId);
 }
