@@ -11,6 +11,12 @@
 	<name>backend</name>
 	<description>Multi-repo for microservice based app</description>
 
+	<properties>
+		<java.version>11</java.version>
+		<maven.compiler.source>11</maven.compiler.source>
+		<maven.compiler.target>11</maven.compiler.target>
+	</properties>
+
 	<modules>
 		<module>account</module>
 		<module>storage</module>

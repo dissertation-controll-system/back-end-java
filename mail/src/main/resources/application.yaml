@@ -30,7 +30,7 @@ spring:
       auth: true
       starttls.enable: true
   activemq:
-    broker-url: tcp://localhost:61616
+    broker-url: ${ACTIVEMQ_URI:tcp://localhost:61616}
     in-memory: false
     non-blocking-redelivery: true
     packages:

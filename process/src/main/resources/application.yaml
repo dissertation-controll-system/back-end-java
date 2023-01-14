@@ -9,9 +9,11 @@ spring:
     change-log: classpath:/changelog/db.changelog-master.yaml
   data:
     mongodb:
-      host: localhost
-      port: 27017
-      database: local
+      host: ${MONGO_BD_HOST:mongodb}
+      port: ${MONGO_BD_PORT:27017}
+      username: ${MONGO_BD_USERNAME:root}
+      password: ${MONGO_BD_PASSWORD:root}
+      authentication-database: admin
   datasource:
     driverClassName: org.postgresql.Driver
     url: jdbc:postgresql://localhost:5436/process-service
@@ -25,7 +27,7 @@ spring:
     hibernate:
       ddl-auto: validate
   activemq:
-    broker-url: tcp://localhost:61616
+    broker-url: ${ACTIVEMQ_URI:tcp://localhost:61616}
     in-memory: false
     non-blocking-redelivery: true
     packages:

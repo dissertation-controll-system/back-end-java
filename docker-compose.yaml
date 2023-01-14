@@ -1,12 +1,18 @@
 version: '3.8'
 services:
-  smtp:
-    image: marcopas/docker-mailslurper
-    restart: always
+  account:
+    build: ./account
     ports:
-      - '2500:2500'
-      - '8085:8085'
-      - '8086:8080'
+      - "8080:8080"
+    depends_on:
+      - account-db
+      - activemq
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://account-db:5432/auth-service
+      - LIQUIBASE_CONTEXTS=demo
+    networks:
+      - microservice-network
+      - account-network
   account-db:
     image: postgres:14.1-alpine
     restart: always
@@ -14,8 +20,27 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: auth-service
+    networks:
+      - account-network
     ports:
       - '5432:5432'
+
+################################################################################
+
+  storage:
+    build: ./storage
+    ports:
+      - "8081:8081"
+    depends_on:
+      - storage-db
+      - activemq
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://storage-db:5432/storage-service
+      - LIQUIBASE_CONTEXTS=demo
+      - ACCOUNT_URI=http://account:8080
+    networks:
+      - microservice-network
+      - storage-network
   storage-db:
     image: postgres:14.1-alpine
     restart: always
@@ -23,8 +48,33 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: storage-service
+    networks:
+      - storage-network
     ports:
       - '5433:5432'
+
+#####################################################################################
+
+  mail:
+    build: ./mail
+    ports:
+      - "8082:8082"
+    depends_on:
+      - mail-db
+      - activemq
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://mail-db:5432/mail-service
+      - LIQUIBASE_CONTEXTS=demo
+      - STORAGE_URI=http://storage:8081
+      - ACCOUNT_URI=http://account:8080
+      - ACTIVEMQ_URI=tcp://activemq:61616
+      - SMTP_HOST=smtp.gmail.com
+      - SMTP_PORT=587
+      - SMTP_USERNAME=
+      - SMTP_PASSWORD=
+    networks:
+      - microservice-network
+      - mail-network
   mail-db:
     image: postgres:14.1-alpine
     restart: always
@@ -32,8 +82,26 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: mail-service
+    networks:
+      - mail-network
     ports:
       - '5434:5432'
+
+########################################################################################
+
+  organization:
+    build: ./organization
+    ports:
+      - "8083:8083"
+    depends_on:
+      - organization-db
+      - activemq
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://organization-db:5432/organization-service
+      - LIQUIBASE_CONTEXTS=demo
+    networks:
+      - microservice-network
+      - organization-network
   organization-db:
     image: postgres:14.1-alpine
     restart: always
@@ -41,8 +109,34 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: organization-service
+    networks:
+      - organization-network
     ports:
       - '5435:5432'
+
+  ########################################################################################
+
+  process:
+    build: ./process
+    ports:
+      - "8084:8084"
+    depends_on:
+      - process-db
+      - mongodb
+      - activemq
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://process-db:5432/process-service
+      - MONGO_BD_HOST=mongodb
+      - MONGO_BD_PORT=27017
+      - MONGO_BD_USERNAME=root
+      - MONGO_BD_PASSWORD=root
+      - LIQUIBASE_CONTEXTS=demo
+      - STORAGE_URI=http://storage:8081
+      - ORGANIZATION_URI=http://organization:8083
+      - ACTIVEMQ_URI=tcp://activemq:61616
+    networks:
+      - microservice-network
+      - process-network
   process-db:
     image: postgres:14.1-alpine
     restart: always
@@ -50,6 +144,8 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: process-service
+    networks:
+      - process-network
     ports:
       - '5436:5432'
   mongodb:
@@ -57,5 +153,27 @@ services:
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: root
+    networks:
+      - process-network
     ports:
       - "27017:27017"
+
+  ########################################################################################
+
+  activemq:
+    image: rmohr/activemq:latest
+    networks:
+      - microservice-network
+    ports:
+      - "61616:61616" # broker (admin:adminactivemq)(amq:amq)
+      - "8161:8161"   # web    http://boot2docker:8161/admin (admin:admin)
+
+########################################################################################
+
+networks:
+  microservice-network:
+  account-network:
+  storage-network:
+  mail-network:
+  organization-network:
+  process-network:
