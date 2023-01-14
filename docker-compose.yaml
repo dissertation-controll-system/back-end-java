@@ -8,8 +8,8 @@ services:
       - account-db
       - activemq
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://account-db:5432/auth-service
-      - LIQUIBASE_CONTEXTS=demo
+      - SPRING_DATASOURCE_URL=${SPRING_DATASOURCE_URL_ACCOUNT:-jdbc:postgresql://account-db:5432/auth-service}
+      - LIQUIBASE_CONTEXTS=${LIQUIBASE_CONTEXTS_ACCOUNT:-demo}
     networks:
       - microservice-network
       - account-network
@@ -30,16 +30,16 @@ services:
   storage:
     build: ./storage
     volumes:
-      - ./stored-files:/opt/app/stored-files
+      - ${STORED_FILES_MOUNT_PATH:-./stored-files}:/opt/app/stored-files
     ports:
       - "8081:8081"
     depends_on:
       - storage-db
       - activemq
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://storage-db:5432/storage-service
-      - LIQUIBASE_CONTEXTS=demo
-      - ACCOUNT_URI=http://account:8080
+      - SPRING_DATASOURCE_URL=${SPRING_DATASOURCE_URL_STORAGE:-jdbc:postgresql://storage-db:5432/storage-service}
+      - LIQUIBASE_CONTEXTS=${LIQUIBASE_CONTEXTS_STORAGE:-demo}
+      - ACCOUNT_URI=${ACCOUNT_URI}
     networks:
       - microservice-network
       - storage-network
@@ -65,15 +65,15 @@ services:
       - mail-db
       - activemq
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://mail-db:5432/mail-service
-      - LIQUIBASE_CONTEXTS=demo
-      - STORAGE_URI=http://storage:8081
-      - ACCOUNT_URI=http://account:8080
-      - ACTIVEMQ_URI=tcp://activemq:61616
-      - SMTP_HOST=smtp.gmail.com
-      - SMTP_PORT=587
-      - SMTP_USERNAME=
-      - SMTP_PASSWORD=
+      - SPRING_DATASOURCE_URL=${SPRING_DATASOURCE_URL_MAIL:-jdbc:postgresql://mail-db:5432/mail-service}
+      - LIQUIBASE_CONTEXTS=${LIQUIBASE_CONTEXTS_MAIL:-demo}
+      - STORAGE_URI=${STORAGE_URI}
+      - ACCOUNT_URI=${ACCOUNT_URI}
+      - ACTIVEMQ_URI=${ACTIVEMQ_URI}
+      - SMTP_HOST=${SMTP_HOST:-smtp.gmail.com}
+      - SMTP_PORT=${SMTP_PORT:-587}
+      - SMTP_USERNAME=${SMTP_USERNAME:?you need to provide smtp username}}
+      - SMTP_PASSWORD=${SMTP_PASSWORD:?you need to provide smtp password}}
     networks:
       - microservice-network
       - mail-network
@@ -99,8 +99,8 @@ services:
       - organization-db
       - activemq
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://organization-db:5432/organization-service
-      - LIQUIBASE_CONTEXTS=demo
+      - SPRING_DATASOURCE_URL=${SPRING_DATASOURCE_URL_ORGANIZATION:-jdbc:postgresql://organization-db:5432/organization-service}
+      - LIQUIBASE_CONTEXTS=${LIQUIBASE_CONTEXTS_ORGANIZATION:-demo}
     networks:
       - microservice-network
       - organization-network
@@ -127,15 +127,15 @@ services:
       - mongodb
       - activemq
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://process-db:5432/process-service
-      - MONGO_BD_HOST=mongodb
-      - MONGO_BD_PORT=27017
-      - MONGO_BD_USERNAME=root
-      - MONGO_BD_PASSWORD=root
-      - LIQUIBASE_CONTEXTS=demo
-      - STORAGE_URI=http://storage:8081
-      - ORGANIZATION_URI=http://organization:8083
-      - ACTIVEMQ_URI=tcp://activemq:61616
+      - SPRING_DATASOURCE_URL=${SPRING_DATASOURCE_URL_PROCESS:-jdbc:postgresql://process-db:5432/process-service}
+      - LIQUIBASE_CONTEXTS=${LIQUIBASE_CONTEXTS_PROCESS:-demo}
+      - MONGO_BD_HOST=${MONGO_BD_HOST_PROCESS:-mongodb}
+      - MONGO_BD_PORT=${MONGO_BD_PORT_PROCESS:-27017}
+      - MONGO_BD_USERNAME=${MONGO_BD_USERNAME_PROCESS}
+      - MONGO_BD_PASSWORD=${MONGO_BD_PASSWORD_PROCESS}
+      - STORAGE_URI=${STORAGE_URI}
+      - ORGANIZATION_URI=${ORGANIZATION_URI}
+      - ACTIVEMQ_URI=${ACTIVEMQ_URI}
     networks:
       - microservice-network
       - process-network
@@ -153,8 +153,8 @@ services:
   mongodb:
     image: mongo:latest
     environment:
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: root
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_BD_USERNAME_PROCESS}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_BD_PASSWORD_PROCESS}
     networks:
       - process-network
     ports:
