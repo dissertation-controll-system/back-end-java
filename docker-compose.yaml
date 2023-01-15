@@ -72,8 +72,8 @@ services:
       - ACTIVEMQ_URI=${ACTIVEMQ_URI}
       - SMTP_HOST=${SMTP_HOST:-smtp.gmail.com}
       - SMTP_PORT=${SMTP_PORT:-587}
-      - SMTP_USERNAME=${SMTP_USERNAME:?you need to provide smtp username}}
-      - SMTP_PASSWORD=${SMTP_PASSWORD:?you need to provide smtp password}}
+      - SMTP_USERNAME=${SMTP_USERNAME:?you need to provide smtp username}
+      - SMTP_PASSWORD=${SMTP_PASSWORD:?you need to provide smtp password}
     networks:
       - microservice-network
       - mail-network
