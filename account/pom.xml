@@ -3,7 +3,12 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>com.masterswork</groupId>
+	<parent>
+		<groupId>com.masterswork</groupId>
+		<artifactId>backend</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+	</parent>
+
 	<artifactId>account</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>account-service</name>
@@ -190,6 +195,23 @@
 							<version>${mapstruct.version}</version>
 						</path>
 					</annotationProccessorPaths>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>io.fabric8</groupId>
+				<artifactId>docker-maven-plugin</artifactId>
+				<version>0.40.3</version>
+				<executions>
+					<execution>
+						<id>default</id>
+						<phase>package</phase>
+						<goals>
+							<goal>build</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<skip>${docker-plugin.skip}</skip>
 				</configuration>
 			</plugin>
 		</plugins>
