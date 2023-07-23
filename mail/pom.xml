@@ -217,6 +217,7 @@
 					</execution>
 				</executions>
 				<configuration>
+					<dockerHost>${docker-plugin.host}</dockerHost>
 					<skip>${docker-plugin.skip}</skip>
 				</configuration>
 			</plugin>

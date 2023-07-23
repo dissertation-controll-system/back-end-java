@@ -91,37 +91,10 @@ services:
 
 ########################################################################################
 
-  organization:
-    build: ./organization
-    ports:
-      - "8083:8083"
-    depends_on:
-      - organization-db
-      - activemq
-    environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://organization-db:5432/organization-service
-      - LIQUIBASE_CONTEXTS=${LIQUIBASE_CONTEXTS_ORGANIZATION:-demo}
-    networks:
-      - microservice-network
-      - organization-network
-  organization-db:
-    image: postgres:14.1-alpine
-    restart: always
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: organization-service
-    networks:
-      - organization-network
-    ports:
-      - '5435:5432'
-
-########################################################################################
-
   process:
     build: ./process
     ports:
-      - "8084:8084"
+      - "8083:8083"
     depends_on:
       - process-db
       - mongodb-process
@@ -149,7 +122,7 @@ services:
     networks:
       - process-network
     ports:
-      - '5436:5432'
+      - '5435:5432'
   mongodb-process:
     image: mongo:latest
     environment:

@@ -16,13 +16,13 @@
 		<maven.compiler.source>11</maven.compiler.source>
 		<maven.compiler.target>11</maven.compiler.target>
 		<docker-plugin.skip>false</docker-plugin.skip>
+		<docker-plugin.host>${env.DOCKER_HOST}</docker-plugin.host>
 	</properties>
 
 	<modules>
 		<module>account</module>
 		<module>storage</module>
 		<module>mail</module>
-		<module>organization</module>
 		<module>process</module>
 	</modules>
 

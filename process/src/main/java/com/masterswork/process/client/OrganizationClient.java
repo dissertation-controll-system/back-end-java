@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.util.Set;
 
 @CollectionFormat(feign.CollectionFormat.CSV)
-@FeignClient(name = "organization-client", url = "${client.organization-uri}")
+@FeignClient(name = "organization-client", url = "${client.account-uri}")
 public interface OrganizationClient {
 
     @GetMapping(path = "/organization/participants", produces = "application/json")

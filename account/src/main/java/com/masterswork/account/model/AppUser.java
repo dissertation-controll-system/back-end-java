@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -16,6 +17,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
@@ -51,25 +53,11 @@ public class AppUser extends AuditedEntity {
     @OneToOne(mappedBy = "user", optional = true)
     private Account account;
 
-    @ManyToMany
-    @JoinTable(name = "user_cathedra",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "cathedra_id"))
-    private Set<Cathedra> cathedras = new HashSet<>();
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<AppUserOrganizationUnit> organizationUnits = new HashSet<>();
 
     public String getFullName() {
         return String.join(" ", lastName, firstName, fathersName);
     }
 
-    public AppUser addCathedra(Cathedra cathedra) {
-        cathedras.add(cathedra);
-        cathedra.getUsers().add(this);
-        return this;
-    }
-
-    public AppUser removeCathedra(Cathedra cathedra) {
-        cathedras.remove(cathedra);
-        cathedra.getUsers().remove(this);
-        return this;
-    }
 }

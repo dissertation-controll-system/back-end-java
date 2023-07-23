@@ -1,5 +1,5 @@
 server:
-  port: 8084
+  port: 8083
 spring:
   application:
     name: auth-service
@@ -68,7 +68,7 @@ springdoc:
 
 client:
   storage-uri: ${STORAGE_URI:http://localhost:8081}
-  organization-uri: ${ORGANIZATION_URI:http://localhost:8083}
+  account-uri: ${ORGANIZATION_URI:http://localhost:8083}
 
 feign:
   autoconfiguration:

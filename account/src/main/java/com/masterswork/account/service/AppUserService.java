@@ -13,10 +13,6 @@ public interface AppUserService {
 
     AppUserResponseDTO createAppUserForAccount(Long accountId, AppUserCreateDTO appUserCreateDTO);
 
-    AppUserResponseDTO assignCathedra(Long userId, Long cathedraId);
-
-    AppUserResponseDTO unassignCathedra(Long userId, Long cathedraId);
-
     AppUserResponseDTO createAppUser(AppUserCreateDTO appUserCreateDTO);
 
     AppUserResponseDTO updateUser(Long userId, AppUserUpdateDTO appUserUpdateDTO);

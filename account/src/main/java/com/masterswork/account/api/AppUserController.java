@@ -3,10 +3,8 @@ package com.masterswork.account.api;
 import com.masterswork.account.api.dto.appuser.AppUserCreateDTO;
 import com.masterswork.account.api.dto.appuser.AppUserResponseDTO;
 import com.masterswork.account.api.dto.appuser.AppUserUpdateDTO;
-import com.masterswork.account.api.dto.cathedra.CathedraResponseDTO;
 import com.masterswork.account.model.enumeration.PersonType;
 import com.masterswork.account.service.AppUserService;
-import com.masterswork.account.service.CathedraService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springdoc.api.annotations.ParameterObject;
@@ -36,27 +34,12 @@ import java.util.Set;
 public class AppUserController {
 
     private final AppUserService appUserService;
-    private final CathedraService cathedraService;
 
     @Operation(summary = "Create new appUser")
     @PreAuthorize("hasRole('USER')")
     @PostMapping(consumes = "application/json", produces = "application/json")
     public ResponseEntity<AppUserResponseDTO> createAppUser(@Valid @RequestBody AppUserCreateDTO appUserCreateDTO) {
         return ResponseEntity.ok(appUserService.createAppUser(appUserCreateDTO));
-    }
-
-    @Operation(summary = "Assign cathedra to appUser")
-    @PreAuthorize("hasRole('ADMIN')")
-    @PutMapping(path = "/{userId}/cathedras/{cathedraId}", produces = "application/json")
-    public ResponseEntity<AppUserResponseDTO> assignCathedra(@PathVariable Long userId, @PathVariable Long cathedraId) {
-        return ResponseEntity.ok(appUserService.assignCathedra(userId, cathedraId));
-    }
-
-    @Operation(summary = "Unassign cathedra from appUser")
-    @PreAuthorize("hasRole('ADMIN')")
-    @DeleteMapping(path = "/{userId}/cathedras/{cathedraId}", produces = "application/json")
-    public ResponseEntity<AppUserResponseDTO> unassignCathedra(@PathVariable Long userId, @PathVariable Long cathedraId) {
-        return ResponseEntity.ok(appUserService.unassignCathedra(userId, cathedraId));
     }
 
     @Operation(summary = "Update appUser by userId")
@@ -97,15 +80,6 @@ public class AppUserController {
                 appUserService.getAllAppUsers(pageable) :
                 appUserService.getAllAppUsersByType(personType, pageable)
         );
-    }
-
-    @Operation(summary = "Get cathedras for appUser by userId")
-    @PreAuthorize("hasRole('USER')")
-    @GetMapping(path = "/{userId}/cathedras", produces = "application/json")
-    public ResponseEntity<Page<CathedraResponseDTO>> getAllCathedrasForAppUser(
-            @PathVariable Long userId,
-            @ParameterObject @PageableDefault(sort = "id") Pageable pageable) {
-        return ResponseEntity.ok(cathedraService.getAllCathedrasByAppUserId(userId, pageable));
     }
 
     @Operation(summary = "Get all available types of users")

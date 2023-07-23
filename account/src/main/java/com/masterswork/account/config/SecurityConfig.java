@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.masterswork.account.config.principal.UserDetailsAdapter;
 import com.masterswork.account.jwt.JwtUtil;
 import com.masterswork.account.jwt.filter.JwtAuthorizationFilter;
+import com.masterswork.account.model.enumeration.RoleName;
 import com.masterswork.account.repository.AccountRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -78,8 +79,7 @@ public class SecurityConfig {
     @Bean
     public RoleHierarchy roleHierarchy() {
         RoleHierarchyImpl roleHierarchy = new RoleHierarchyImpl();
-        String hierarchy = "ROLE_ADMIN > ROLE_USER";
-        roleHierarchy.setHierarchy(hierarchy);
+        roleHierarchy.setHierarchy("ROLE_ADMIN > ROLE_USER");
         return roleHierarchy;
     }
 

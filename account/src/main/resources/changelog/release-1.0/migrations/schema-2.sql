@@ -1,2 +1,2 @@
 insert into role (name) values
-    ('ADMIN'), ( 'USER');
+    ('ADMIN'), ('USER'), ('UNIT_HEAD'), ('UNIT_PARTICIPANT');

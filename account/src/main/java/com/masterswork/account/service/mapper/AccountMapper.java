@@ -14,7 +14,10 @@ import org.mapstruct.NullValuePropertyMappingStrategy;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Mapper(componentModel = "spring", uses = AccountMapperUtils.class)
 public interface AccountMapper {
@@ -31,6 +34,7 @@ public interface AccountMapper {
     void patchFrom(@MappingTarget Account target, AccountUpdateDTO source);
 
     @Mapping(target = "appUserRef", expression = "java(mapAppUserReference(account))")
+    @Mapping(target = "organizationRoles", expression = "java(mapOrganizationRoles(account))")
     AccountResponseDTO toDto(Account account);
 
     List<AccountResponseDTO> toDto(Collection<Account> account);
@@ -38,9 +42,19 @@ public interface AccountMapper {
     default String mapRoleName(Role role) {
         return role.getName();
     }
+
     default String mapAppUserReference(Account account) {
         return Optional.ofNullable(account.getUser())
                 .map(user -> "/app-users/" + user.getId())
+                .orElse(null);
+    }
+
+    default Map<Long, Set<String>> mapOrganizationRoles(Account account) {
+        return Optional.ofNullable(account.getUser())
+                .map(appUser -> appUser.getOrganizationUnits().stream()
+                    .collect(Collectors.groupingBy(
+                            relation -> relation.getOrganizationUnit().getId(),
+                            Collectors.mapping(relation -> relation.getRole().getName(), Collectors.toSet()))))
                 .orElse(null);
     }
 
